@@ -1,0 +1,1 @@
+C:\Users\thirz\RiderProjects\maui\maui\maui.csproj;x64
