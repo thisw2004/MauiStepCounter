@@ -64,4 +64,10 @@ wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
 wwwroot\favicon.png
+wwwroot\Icons\add.png
+wwwroot\Icons\auth.jpg
+wwwroot\Icons\cross.png
+wwwroot\Icons\edit.png
+wwwroot\Icons\lock.png
+wwwroot\Icons\share.png
 wwwroot\index.html
