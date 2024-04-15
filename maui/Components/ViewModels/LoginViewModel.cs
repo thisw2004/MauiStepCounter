@@ -11,14 +11,13 @@ namespace maui.components.ViewModels
 {
     public class LoginViewModel
     {
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        
         public string Email { get; set; }
         public string Password { get; set; }
 
         public event EventHandler<string> OnLoginSuccessful; // Event for successful login
 
-        public async Task<string> Login(NavigationManager navigationManager)
+        public async Task<string> Login()
         {
             using (var httpClient = new HttpClient())
             {
@@ -36,8 +35,10 @@ namespace maui.components.ViewModels
 
                     OnLoginSuccessful?.Invoke(this, jsonResponse); // Raise event for successful login
                     
-                    
-                        navigationManager.NavigateTo("/home");
+                    /*
+                    await Shell.Current.GoToAsync("/home");
+                    */
+                        
                   
                     //redirect here
                     
@@ -45,6 +46,9 @@ namespace maui.components.ViewModels
                 }
                 else
                 {
+                    /*
+                    await Shell.Current.GoToAsync("/home");
+                    */
                     return "Invalid login credentials. Please try again."; // Generic error message
                 }
             }
