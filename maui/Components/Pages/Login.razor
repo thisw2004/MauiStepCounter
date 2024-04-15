@@ -2,9 +2,12 @@
 @using maui.Components.Layout
 @using maui.components.ViewModels
 @using Models
+@*navigation*@
+@inject NavigationManager NavigationManager
 
 @layout LayoutWithoutNav
 <h3>Login</h3>
+
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -35,11 +38,20 @@
 
     private async Task HandleLogin()
     {
-        var viewModel = new LoginViewModel();
+        var viewModel = new LoginViewModel(NavigationManager);
     viewModel.Email = loginModel.Email;
     viewModel.Password = loginModel.Password;
 
     var loginResult = await viewModel.Login();
+    
     ErrorMessage = loginResult ?? "Login failed";
+    
+    
+   
+    /*await Shell.Current.GoToAsync("/home");*/
     }
+    
+    
+    
+    
 }
