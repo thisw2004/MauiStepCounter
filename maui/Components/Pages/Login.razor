@@ -1,19 +1,45 @@
 ﻿@page "/"
 @using maui.Components.Layout
+@using maui.components.ViewModels
+@using Models
+
 @layout LayoutWithoutNav
 <h3>Login</h3>
 
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p>@ErrorMessage</p>
+}
 
+<EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+    <label for="email" name="email">Email</label>
+    <input type="text" id="email" @bind="loginModel.Email" />
+    <ValidationMessage For="@(() => loginModel.Email)" />
 
-<label for="email" name="email">Email</label>
-<input type="text" id="email" placeholder="email" />
-<br />
-<label for="password" name="password">Password</label>
-<input type="password" id="password" placeholder="password" />
+    <br />
+
+    <label for="password" name="password">Password</label>
+    <input type="password" id="password" @bind="loginModel.Password" />
+    <ValidationMessage For="@(() => loginModel.Password)" />
+
+    <br />
+
+    <button type="submit">Login</button>
+</EditForm>
 
 <p>No account? Register <u><a href="/register">here</a></u></p>
-@* todo: fix here link *@
 
-<a href="/home" type="submit" value="Login" >Login</a> 
+@code {
+    private LoginModel loginModel = new LoginModel();
+    string ErrorMessage; // Assuming this stays private
 
-@* add link in this button *@
+    private async Task HandleLogin()
+    {
+        var viewModel = new LoginViewModel();
+    viewModel.Email = loginModel.Email;
+    viewModel.Password = loginModel.Password;
+
+    var loginResult = await viewModel.Login();
+    ErrorMessage = loginResult ?? "Login failed";
+    }
+}
