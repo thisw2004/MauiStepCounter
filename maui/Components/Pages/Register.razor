@@ -1,20 +1,56 @@
-﻿@page "/Register"
+﻿@page "/register"
+@using maui.components.ViewModels
+@using maui.Components.Models
 @using maui.Components.Layout
+@* Remove unnecessary namespace *@
+@inject NavigationManager NavigationManager
+
 @layout LayoutWithoutNav
 <h3>Register</h3>
 
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p>@ErrorMessage</p>
+}
 
+<EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+    <label for="email" name="email">Email</label>
+    <input type="text" id="email" @bind="registerModel.Email" />
+    <ValidationMessage For="@(() => registerModel.Email)" />
 
-<label for="email" name="email">Email</label>
-<input type="text" id="email" placeholder="email" />
-<br />
-<label for="password" name="password">Password</label>
-<input type="password" id="password" placeholder="password" />
-<br />
-<label for="username" name="username">Username</label>
-<input type="text" id="username" placeholder="username" />
+    <br/>
 
+    <label for="password" name="password">Password</label>
+    <input type="password" id="password" @bind="registerModel.Password" />
+    <ValidationMessage For="@(() => registerModel.Password)" />
 
+    <br/>
 
-<a href="/home" type="submit" value="Login" >Register</a> 
-@* add link in this button *@
+    <label for="username" name="username">Username</label>
+    <input type="text" id="username" @bind="registerModel.Username" />
+    <ValidationMessage For="@(() => registerModel.Username)" />
+    <br/>
+
+    <button type="submit">register</button>
+</EditForm>
+
+@code {
+    public RegisterModel registerModel = new RegisterModel(); // Change to public
+    public string ErrorMessage; // Change to public
+
+    private async Task HandleRegister() // Correct method name
+    {
+        var viewModel = new RegisterViewModel(NavigationManager);
+        viewModel.Email = registerModel.Email;
+        viewModel.Password = registerModel.Password;
+        viewModel.Username = registerModel.Username;
+
+        var registerResult = await viewModel.Register();
+    
+        ErrorMessage = registerResult ?? "register failed";
+    
+    
+   
+        /*await Shell.Current.GoToAsync("/home");*/
+    }
+}

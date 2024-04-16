@@ -15,7 +15,7 @@
 }
 
 <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
-    <label for="email" name="email">Email</label>
+    <label for="email" name="email">Username</label>
     <input type="text" id="email" @bind="loginModel.Email" />
     <ValidationMessage For="@(() => loginModel.Email)" />
 
