@@ -31,7 +31,7 @@
     <ValidationMessage For="@(() => registerModel.Username)" />
     <br/>
 
-    <button type="submit">register</button>
+    <button type="submit">Register</button>
 </EditForm>
 
 @code {
@@ -48,9 +48,7 @@
         var registerResult = await viewModel.Register();
     
         ErrorMessage = registerResult ?? "register failed";
-    
-    
-   
+        
         /*await Shell.Current.GoToAsync("/home");*/
     }
 }
