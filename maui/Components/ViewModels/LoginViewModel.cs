@@ -34,7 +34,7 @@ namespace maui.components.ViewModels
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await httpClient.PostAsync("http://localhost:5041/api/account/login", content);
-
+                
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
