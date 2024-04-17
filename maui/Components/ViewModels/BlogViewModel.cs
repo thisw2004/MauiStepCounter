@@ -1,48 +1,51 @@
-﻿using System;
-using System.Net.Http;
-using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
+using maui.Components.Models;
 
-namespace maui.components.ViewModels
+public class BlogViewModel : INotifyPropertyChanged
 {
-    public class BlogViewModel
+    private readonly HttpClient _httpClient;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public BlogViewModel(HttpClient httpClient)
     {
-        private readonly NavigationManager _navigationManager;
+        _httpClient = httpClient;
+        Blogs = new List<BlogModel>();
+        Task.Run(async () => await LoadBlogs());
+    }
 
-        public BlogViewModel(NavigationManager navigationManager)
+    private List<BlogModel> _blogs;
+    public List<BlogModel> Blogs
+    {
+        get => _blogs;
+        set
         {
-            _navigationManager = navigationManager;
+            _blogs = value;
+            OnPropertyChanged(nameof(Blogs));
         }
+    }
 
-        public event EventHandler<string> OnBlogsRetrieved; // Event for retrieving blogs
-
-        public async Task<string> ShowBlogs()
+    private async Task LoadBlogs()
+    {
+        try
         {
-            try
-            {
-                using (var httpClient = new HttpClient())
-                {
-                    var response = await httpClient.GetAsync("http://localhost:5041/api/blogs"); // Adjusted endpoint
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var jsonResponse = await response.Content.ReadAsStringAsync();
-                        OnBlogsRetrieved?.Invoke(this, jsonResponse); // Raise event for blogs retrieval
-                        return null; // No error, return null
-                    }
-                    else
-                    {
-                        // Handle error response
-                        return $"Failed to retrieve blogs. Error: {response.ReasonPhrase}";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-                return $"Failed to retrieve blogs. Exception: {ex.Message}";
-            }
+            var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>("http://localhost:5041/api/blogs");
+            if (blogs != null)
+                Blogs = blogs.ToList();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            // Handle error
+        }
+    }
+
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

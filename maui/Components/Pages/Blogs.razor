@@ -1,48 +1,21 @@
-﻿<!-- Blogs.razor -->
-@page "/Blogs"
-@using maui.components.ViewModels
-@using maui.Components.Models
-@inject BlogViewModel BlogViewModel
+﻿@page "/blogs"
+@inject BlogViewModel ViewModel
 
-<b><h3 style="text-align:center; margin-top: 2%;">Blogs</h3></b>
+<h1>Blogs</h1>
 
-@if (BlogList == null)
-{
-    <p>Loading...</p>
-}
-else if (BlogList.Count == 0)
-{
-    <p>No blogs found.</p>
-}
-else
+@if (ViewModel.Blogs.Any())
 {
     <ul>
-        @foreach (var blog in BlogList)
+        @foreach (var blog in ViewModel.Blogs)
         {
             <li>
-                <h3><a href="/blog" style="text-decoration:none;">@($"{blog.Counter}. {blog.Title}")</a></h3>
-                <!-- Display other properties as needed -->
+                <h3>@blog.Title</h3>
+                @*<p>@blog.Content</p>*@
             </li>
         }
     </ul>
 }
-
-@code {
-    List<BlogModel>? BlogList { get; set; } // Property to store retrieved blogs, nullable
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadBlogsAsync();
-    }
-
-    private async Task LoadBlogsAsync()
-    {
-       var errorMessage = await BlogViewModel.ShowBlogs(); // Nullable error message
-
-        if (errorMessage != null)
-        {
-            // Handle error
-            Console.WriteLine(errorMessage);
-        }
-    }
+else
+{
+    <p>No blogs found.</p>
 }
