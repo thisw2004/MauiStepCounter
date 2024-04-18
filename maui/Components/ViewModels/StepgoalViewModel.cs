@@ -1,51 +1,95 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using maui.Components.Models;
 
-public class StepgoalViewModel : INotifyPropertyChanged
+namespace maui.components.ViewModels
 {
-    private readonly HttpClient _httpClient;
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public StepgoalViewModel(HttpClient httpClient)
+    public class StepgoalViewModel : INotifyPropertyChanged
     {
-        _httpClient = httpClient;
-        StepGoals = new List<StepgoalModel>();
-        LoadStepGoals();
-    }
+        private readonly HttpClient _httpClient;
+        private List<StepgoalModel> _blogs;
+        private StepgoalModel? _selectedBlog; // Added SelectedBlog property
 
-    private List<StepgoalModel> _stepgoals;
-    public List<StepgoalModel> Stepgoals
-    {
-        get => _stepgoals;
-        set
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public StepgoalViewModel(HttpClient httpClient)
         {
-            _stepgoals = value;
-            OnPropertyChanged(nameof(_stepgoals));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _blogs = new List<StepgoalModel>();
+            LoadBlogs();
         }
-    }
 
-    private async Task LoadStepGoals()
-    {
-        try
+        public List<StepgoalModel> Blogs
         {
-            var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>("http://localhost:5041/api/blogs");
-            if (blogs != null)
-                Stepgoals = Stepgoals.ToList();
+            get => _blogs;
+            set
+            {
+                _blogs = value;
+                OnPropertyChanged(nameof(Blogs));
+            }
         }
-        catch (Exception ex)
+        
+
+        // SelectedBlog property
+        public StepgoalModel? SelectedBlog
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            // Handle error
+            get => _selectedBlog;
+            set
+            {
+                _selectedBlog = value;
+                OnPropertyChanged(nameof(SelectedBlog));
+            }
         }
-    }
 
+        private async Task LoadBlogs()
+        {
+            try
+            {
+                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<StepgoalModel>>("http://localhost:5041/api/stepgoals");
+                if (blogs != null)
+                    Blogs = blogs.ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                // Handle error
+            }
+        }
 
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public async Task<StepgoalModel?> GetBlogByIdAsync(int id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"http://localhost:5041/api/blogs/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var contentStream = await response.Content.ReadAsStreamAsync();
+                    return await JsonSerializer.DeserializeAsync<StepgoalModel>(contentStream);
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to retrieve blog with ID {id}: {response.StatusCode}");
+                    // Handle error or display a user-friendly message
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching blog with ID {id}: {ex.Message}");
+                // Handle error or display a user-friendly message
+                return null;
+            }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
