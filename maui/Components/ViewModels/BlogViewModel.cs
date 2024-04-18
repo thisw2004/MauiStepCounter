@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using maui.Components.Models;
@@ -49,28 +50,14 @@ namespace maui.components.ViewModels
         {
             try
             {
-                var response = await _httpClient.GetAsync("http://localhost:5041/api/blogs");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var contentStream = await response.Content.ReadAsStreamAsync();
-                    var blogs = await JsonSerializer.DeserializeAsync<IEnumerable<BlogModel>>(contentStream);
-                    if (blogs != null)
-                    {
-                        // Only fetch blog content, not titles
-                        Blogs = new List<BlogModel>(blogs.Select(b => new BlogModel { Content = b.Content }));
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to retrieve blogs: {response.StatusCode}");
-                    // Handle error or display a user-friendly message
-                }
+                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>("http://localhost:5041/api/blogs");
+                if (blogs != null)
+                    Blogs = blogs.ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while loading blogs: {ex.Message}");
-                // Handle error or display a user-friendly message
+                Console.WriteLine($"Error: {ex.Message}");
+                // Handle error
             }
         }
 

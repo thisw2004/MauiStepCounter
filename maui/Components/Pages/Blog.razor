@@ -3,14 +3,18 @@
 @inject BlogViewModel ViewModel
 @inject NavigationManager Navigation
 
+<h1>Blog Detail Page</h1>
+
+<p>Blog ID: @Id</p>
+
 @if (ViewModel.SelectedBlog == null)
 {
     <p>Loading blog details...</p>
 }
 else
 {
-    <h1>@ViewModel.SelectedBlog.Title</h1>
-    <p>@ViewModel.SelectedBlog.Content</p>
+    <h2>Title: @ViewModel.SelectedBlog.Title</h2>
+    <p>Content: @ViewModel.SelectedBlog.Content</p>
 }
 
 @code {
