@@ -13,7 +13,7 @@ namespace maui.components.ViewModels
     {
         private readonly HttpClient _httpClient;
         private List<StepgoalModel> _blogs;
-        private StepgoalModel? _selectedBlog; // Added SelectedBlog property
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,16 +35,8 @@ namespace maui.components.ViewModels
         }
         
 
-        // SelectedBlog property
-        public StepgoalModel? SelectedBlog
-        {
-            get => _selectedBlog;
-            set
-            {
-                _selectedBlog = value;
-                OnPropertyChanged(nameof(SelectedBlog));
-            }
-        }
+        
+       
 
         private async Task LoadBlogs()
         {

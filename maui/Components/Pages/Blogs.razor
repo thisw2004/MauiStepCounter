@@ -10,11 +10,11 @@
     <ul>
         @foreach (var blog in ViewModel.Blogs)
         {
-            <li>
+            
                 <h3><a href="@($"blog/{blog.Id}")" style="text-decoration:none;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a></h3>
                 <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
                 @*<p>@blog.Content</p>*@
-            </li>
+            
         }
     </ul>
 }
