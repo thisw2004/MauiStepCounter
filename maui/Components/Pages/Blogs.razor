@@ -1,5 +1,7 @@
 ﻿@page "/blogs"
+@using maui.components.ViewModels
 @inject BlogViewModel ViewModel
+@inject NavigationManager Navigation
 
 <h1>Blogs</h1>
 
@@ -9,8 +11,9 @@
         @foreach (var blog in ViewModel.Blogs)
         {
             <li>
-                <h3>@blog.Title</h3>
-                @*<p>@blog.Content</p>*@
+                <h3><a href="@($"blog/{blog.Id}")" style="text-decoration:none;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a></h3>
+                <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
+                <p>@blog.Content</p>
             </li>
         }
     </ul>
@@ -18,4 +21,11 @@
 else
 {
     <p>No blogs found.</p>
+}
+
+@code {
+    private void NavigateToDetail(int id)
+    {
+        Navigation.NavigateTo($"blog/{id}");
+    }
 }

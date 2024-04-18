@@ -1,12 +1,32 @@
-﻿@page "/Blog"
+﻿@page "/blog/{id}"
+@using maui.components.ViewModels
+@inject BlogViewModel ViewModel
+@inject NavigationManager Navigation
 
+@if (ViewModel.SelectedBlog == null)
+{
+    <p>Loading blog details...</p>
+}
+else
+{
+    <h1>@ViewModel.SelectedBlog.Title</h1>
+    <p>@ViewModel.SelectedBlog.Content</p>
+}
 
+@code {
+    [Parameter]
+    public string Id { get; set; }
 
-<h3>Blog 1</h3>
-
-<h5>0-10-2023,Thisw</h5>
-<a><img alt="share" src="./Icons/share.png" style="width:30px; height: 30px;" /></a>
-
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at lorem mauris. Aenean non sapien lorem. Praesent tempor mi id ante condimentum rutrum. Cras nibh velit, varius vitae ullamcorper sit amet, sagittis sed lorem. Maecenas sit amet quam neque. Quisque laoreet aliquet neque, quis aliquam lectus lobortis vel. Curabitur eget.
-</p>
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            ViewModel.SelectedBlog = await ViewModel.GetBlogByIdAsync(int.Parse(Id));
+            StateHasChanged();
+        }
+        else
+        {
+            Navigation.NavigateTo("/blogs");
+        }
+    }
+}
