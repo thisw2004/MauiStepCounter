@@ -13,12 +13,12 @@
     <ul>
         @foreach (var blog in ViewModel.Blogs)
         {
-            
             <h3><a href="@($"blog/{blog.Id}")" style="text-decoration:none;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a></h3>
-
-            <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
-            @*<p>@blog.Content</p>*@
-            
+            <div>
+                <a href="mailto:?subject=Check out this blog post!&body=I thought you might be interested in this blog post: %0A@($"http://localhost:5041/blog/{blog.Id}").">
+                    <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
+                </a>
+            </div>    
         }
     </ul>
 }
