@@ -46,7 +46,7 @@ namespace maui.components.ViewModels
             }
         }
 
-        private async Task LoadBlogs()
+        public async Task LoadBlogs()
         {
             try
             {

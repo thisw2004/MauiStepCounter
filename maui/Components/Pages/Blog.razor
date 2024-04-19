@@ -28,6 +28,22 @@ else
     {
         <p>No content found</p>
     }
+    @if (ViewModel.SelectedBlog?.Content != null)
+    {
+        <p>Author: @ViewModel.SelectedBlog.Author</p>
+    }
+    else
+    {
+        <p>No content found</p>
+    }
+    @if (ViewModel.SelectedBlog?.Content != null)
+    {
+        <p>Date: @ViewModel.SelectedBlog.CreatedAt</p>
+    }
+    else
+    {
+        <p>No content found</p>
+    }
 }
 
 @code {

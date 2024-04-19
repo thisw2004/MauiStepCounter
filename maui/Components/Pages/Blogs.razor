@@ -4,6 +4,8 @@
 @inject BlogViewModel ViewModel
 @inject NavigationManager Navigation
 
+
+
 <h1>Blogs</h1>
 
 @if (ViewModel.Blogs.Any())
@@ -15,14 +17,14 @@
             <h3><a href="@($"blog/{blog.Id}")" style="text-decoration:none;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a></h3>
 
             <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
-                @*<p>@blog.Content</p>*@
+            @*<p>@blog.Content</p>*@
             
         }
     </ul>
 }
 else
 {
-    <p>No blogs found.</p>
+    <p>Loading blogs...</p>
 }
 
 @code {
@@ -31,6 +33,8 @@ else
         Navigation.NavigateTo($"blog/{blogId}");
     }
 
-
-    
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadBlogs(); // Call LoadBlogs asynchronously
+    }
 }
