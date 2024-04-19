@@ -1,20 +1,33 @@
 ﻿@page "/blog/{id}"
 @using maui.components.ViewModels
 @inject BlogViewModel ViewModel
-@inject NavigationManager Navigation
 
 <h1>Blog Detail Page</h1>
 
 <p>Blog ID: @Id</p>
 
-@if (ViewModel.SelectedBlog == null)
+@if (ViewModel.SelectedBlog?.Title == null)
 {
     <p>Loading blog details...</p>
 }
 else
 {
-    <h2>Title: @ViewModel.SelectedBlog.Title</h2>
-    <p>Content: @ViewModel.SelectedBlog.Content</p>
+    @if (ViewModel.SelectedBlog?.Title != null)
+    {
+        <h2>Title: @ViewModel.SelectedBlog.Title</h2>
+    }
+    else
+    {
+        <p>No Title found</p>
+    }
+    @if (ViewModel.SelectedBlog?.Content != null)
+    {
+        <p>Content: @ViewModel.SelectedBlog.Content</p>
+    }
+    else
+    {
+        <p>No content found</p>
+    }
 }
 
 @code {
@@ -25,12 +38,28 @@ else
     {
         if (!string.IsNullOrWhiteSpace(Id))
         {
-            ViewModel.SelectedBlog = await ViewModel.GetBlogByIdAsync(int.Parse(Id));
-            StateHasChanged();
+            if (int.TryParse(Id, out int blogId))
+            {
+                try
+                {
+                    ViewModel.SelectedBlog = await ViewModel.GetBlogByIdAsync(blogId);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching blog details: {ex.Message}");
+                    // Display user-friendly error message (optional)
+                }
+            }
+            else
+            {
+                // Handle invalid ID
+                Console.WriteLine("Invalid blog ID.");
+            }
         }
         else
         {
-            Navigation.NavigateTo("/blogs");
+            // Handle missing ID
+            Console.WriteLine("Blog ID not provided.");
         }
     }
 }

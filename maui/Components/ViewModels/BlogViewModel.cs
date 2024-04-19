@@ -70,19 +70,19 @@ namespace maui.components.ViewModels
                 if (response.IsSuccessStatusCode)
                 {
                     var contentStream = await response.Content.ReadAsStreamAsync();
-                    return await JsonSerializer.DeserializeAsync<BlogModel>(contentStream);
+                    // Ensure property names match the API response exactly (case-sensitive)
+                    var blog = await JsonSerializer.DeserializeAsync<BlogModel>(contentStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return blog;
                 }
                 else
                 {
                     Console.WriteLine($"Failed to retrieve blog with ID {id}: {response.StatusCode}");
-                    // Handle error or display a user-friendly message
                     return null;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while fetching blog with ID {id}: {ex.Message}");
-                // Handle error or display a user-friendly message
                 return null;
             }
         }
