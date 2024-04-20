@@ -1,0 +1,28 @@
+﻿@page "/AddStepgoal"
+@using maui.Components.ViewModels
+@using maui.Components.Models
+@inject StepgoalViewModel ViewModel
+@using System.ComponentModel.DataAnnotations
+
+<h3>Add Stepgoal</h3>
+
+@if (ViewModel.IsSuccessful)
+{
+    <div class="alert alert-success">Stepgoal created successfully!</div>
+}
+
+<form @onsubmit="CreateStepgoal">
+    <div class="form-group">
+        <label for="goal">Goal:</label>
+        <input @bind="ViewModel.Goal" type="number" class="form-control" />
+        <ValidationMessage For="@(() => ViewModel.Goal)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Stepgoal</button>
+</form>
+
+@code {
+    private async Task CreateStepgoal()
+    {
+        await ViewModel.CreateStepgoal();
+    }
+}
