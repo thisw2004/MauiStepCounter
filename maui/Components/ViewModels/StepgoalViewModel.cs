@@ -2,6 +2,8 @@
 using System.Net.Http.Json;
 using maui.Components.Models;
 
+namespace maui.components.ViewModels;
+
 public class StepgoalViewModel : INotifyPropertyChanged
 {
     private readonly HttpClient _httpClient;
