@@ -4,11 +4,12 @@ using maui.Components.Models;
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
+    //default values
     private readonly HttpClient _httpClient;
     private int _goal;
     private DateTime _date = DateTime.Now;
-    private int _progress;
-    private bool _achieved;
+    private int _progress = 0;
+    private bool _achieved = false;
     public bool IsSuccessful { get; set; }
 
     public event PropertyChangedEventHandler PropertyChanged;
