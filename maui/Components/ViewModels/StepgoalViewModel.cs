@@ -118,6 +118,9 @@ public class StepgoalViewModel : INotifyPropertyChanged
             var todaysGoals = allStepgoals.Where(sg => sg.Date.Date == today.Date).ToList();
 
             // 3. Delete each goal individually
+            int deletedGoalsCount = todaysGoals.Count;
+            bool isDeletionSuccessful = deletedGoalsCount > 0;
+
             foreach (var goal in todaysGoals)
             {
                 var deleteUrl = $"http://localhost:5041/api/stepgoals/{goal.Id}";
@@ -130,8 +133,17 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 }
             }
 
-            // 4. Optional success message
-            Console.WriteLine($"Successfully deleted {todaysGoals.Count} stepgoals for today.");
+            // 4. Handle success or no goals found
+            if (isDeletionSuccessful)
+            {
+                Console.WriteLine($"Successfully deleted {deletedGoalsCount} stepgoals for today.");
+                // Update UI with success message (see integration steps)
+            }
+            else
+            {
+                Console.WriteLine("No stepgoals found for today to delete.");
+                // Consider displaying a message indicating no goals were found
+            }
         }
         catch (Exception ex)
         {
@@ -139,4 +151,5 @@ public class StepgoalViewModel : INotifyPropertyChanged
             // Handle general errors (e.g., network issues)
         }
     }
+
 }
