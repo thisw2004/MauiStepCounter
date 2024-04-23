@@ -151,5 +151,34 @@ public class StepgoalViewModel : INotifyPropertyChanged
             // Handle general errors (e.g., network issues)
         }
     }
+    
+    public async Task UpdateStepgoal(StepgoalModel updatedGoal)
+    {
+        // Construct the update URL with the goal ID
+        var updateUrl = $"http://localhost:5041/api/stepgoals/{updatedGoal.Id}";
+
+        try
+        {
+            var content = JsonContent.Create(updatedGoal);
+            var response = await _httpClient.PutAsync(updateUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Stepgoal updated successfully!");
+                Goal = updatedGoal.Goal; // Update local goal value
+                IsSuccessful = true;  // Set flag for notification
+            }
+            else
+            {
+                Console.WriteLine($"Error updating stepgoal: {response.StatusCode}");
+                IsSuccessful = false; // Set flag for error notification
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            IsSuccessful = false; // Set flag for error notification
+        }
+    }
 
 }

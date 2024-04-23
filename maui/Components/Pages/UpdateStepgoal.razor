@@ -1,0 +1,41 @@
+﻿@page "/UpdateStepgoal"
+@using maui.Components.Models
+@inject StepgoalViewModel viewModel
+
+<h1>Update Step Goal</h1>
+
+@if (viewModel.Goal > 0)
+{
+    <form @submit="@(() => UpdateGoal())">
+        <label for="goal">New Goal:</label>
+        <input type="number" id="goal" @bind-value="viewModel.Goal" />
+        <button type="submit">Update</button>
+    </form>
+}
+else
+{
+    <p>No step goal found for today.</p>
+}
+
+@code {
+    [Parameter]
+    public int GoalId { get; set; }  // Added parameter to receive goal ID
+    private readonly NavigationManager _navigationManager;
+    protected async Task UpdateGoal()
+    {
+        await viewModel.UpdateStepgoal(new StepgoalModel
+        {
+            Id = GoalId,  // Use received GoalId for update
+            Goal = viewModel.Goal,
+            Date = viewModel.Date,
+            Progress = viewModel.Progress,
+            Achieved = viewModel.Achieved
+        });
+
+        if (viewModel.IsSuccessful)
+        {
+            // Redirect to home page after successful update
+            _navigationManager.NavigateTo("/home");
+        }
+    }
+}
