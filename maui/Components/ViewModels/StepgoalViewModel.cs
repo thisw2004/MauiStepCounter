@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Net.Http.Json;
 using maui.Components.Models;
+using System.Linq;
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
@@ -92,5 +93,50 @@ public class StepgoalViewModel : INotifyPropertyChanged
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    
+    public async Task DeleteTodaysGoals()
+    {
+        // 1. Get all stepgoals for today
+        var today = DateTime.Today;
+        var url = "http://localhost:5041/api/stepgoals"; // Assuming all stepgoals are retrieved here
+
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error retrieving stepgoals: {response.StatusCode}");
+                return; // Handle error appropriately (e.g., display message to user)
+            }
+
+            var allStepgoals = await response.Content.ReadFromJsonAsync<List<StepgoalModel>>();
+
+            // 2. Filter for goals with today's date
+            var todaysGoals = allStepgoals.Where(sg => sg.Date.Date == today.Date).ToList();
+
+            // 3. Delete each goal individually
+            foreach (var goal in todaysGoals)
+            {
+                var deleteUrl = $"http://localhost:5041/api/stepgoals/{goal.Id}";
+                var deleteResponse = await _httpClient.DeleteAsync(deleteUrl);
+
+                if (!deleteResponse.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error deleting stepgoal {goal.Id}: {deleteResponse.StatusCode}");
+                    // Handle individual deletion errors (optional)
+                }
+            }
+
+            // 4. Optional success message
+            Console.WriteLine($"Successfully deleted {todaysGoals.Count} stepgoals for today.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle general errors (e.g., network issues)
+        }
     }
 }
