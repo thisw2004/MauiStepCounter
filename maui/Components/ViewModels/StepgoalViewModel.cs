@@ -96,7 +96,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     
-    
+    //delete stepgoals
     public async Task DeleteTodaysGoals()
     {
         // 1. Get all stepgoals for today
@@ -203,9 +203,11 @@ public class StepgoalViewModel : INotifyPropertyChanged
             var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>("http://localhost:5041/api/stepgoals"); // Assuming all stepgoals are retrieved here
             if (allGoals != null)
             {
-                AllStepgoals = allGoals; // Update all goals (optional)
+                AllStepgoals = allGoals;
                 // Filter for today's goals
-                IsSuccessful = allGoals.Any(sg => sg.Date.Date == DateTime.Today.Date);
+                var todaysGoals = allGoals.Where(sg => sg.Date.Date == DateTime.Today.Date).ToList();
+                IsSuccessful = todaysGoals.Count <= 1; // Check for max 1 goal
+                ErrorMessage = todaysGoals.Count > 1 ? "You have set more than 1 step goal for today. Please keep it to 1 or less." : "";
             }
             else
             {
@@ -218,5 +220,8 @@ public class StepgoalViewModel : INotifyPropertyChanged
             IsSuccessful = false; // Set flag for error
         }
     }
+
+    /*public bool IsSuccessful { get; private set; } // Flag for successful data retrieval*/
+    public string ErrorMessage { get; private set; }
 
 }
