@@ -7,6 +7,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
 {
     //default values
     private readonly HttpClient _httpClient;
+    private List<StepgoalModel> _allStepgoals;
     private int _goal;
     private DateTime _date = DateTime.Now;
     private int _progress = 0;
@@ -152,6 +153,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         }
     }
     
+    //update works not yet
     public async Task UpdateStepgoal(StepgoalModel updatedGoal)
     {
         // Construct the update URL with the goal ID
@@ -178,6 +180,42 @@ public class StepgoalViewModel : INotifyPropertyChanged
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
             IsSuccessful = false; // Set flag for error notification
+        }
+    }
+    
+    
+    
+    //displays today's goal
+    public List<StepgoalModel> AllStepgoals // Expose all goals (optional)
+    {
+        get => _allStepgoals;
+        set
+        {
+            _allStepgoals = value;
+            OnPropertyChanged(nameof(AllStepgoals));
+        }
+    }
+    
+    public async Task LoadTodayStepgoals() // New method for today's goals
+    {
+        try
+        {
+            var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>("http://localhost:5041/api/stepgoals"); // Assuming all stepgoals are retrieved here
+            if (allGoals != null)
+            {
+                AllStepgoals = allGoals; // Update all goals (optional)
+                // Filter for today's goals
+                IsSuccessful = allGoals.Any(sg => sg.Date.Date == DateTime.Today.Date);
+            }
+            else
+            {
+                IsSuccessful = false; // Set flag for error
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            IsSuccessful = false; // Set flag for error
         }
     }
 
