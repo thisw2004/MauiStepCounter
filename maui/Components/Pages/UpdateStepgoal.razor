@@ -19,53 +19,22 @@ else if (!viewModel.IsSuccessful)
 }
 else
 {
-    <form @submit="@(() => UpdateGoal(viewModel.Goal))">
-        <p>Current goal for today:@viewModel.TodaysGoal?.Goal</p>
+    // Cast the viewmodel to access the private property (if type is known)
+    var castedViewModel = (StepgoalViewModel)viewModel;
+
+    <form @submit="@(() => { 
+              var goal = castedViewModel.AllStepgoals.FirstOrDefault(sg => sg.Date.Date == DateTime.Today.Date)?.Goal ?? 0;
+              return viewModel.UpdateStepgoal(new StepgoalModel { Goal = goal }); 
+          })"
+>        <p>Current goal(s) for today:</p>
+        @foreach (var goal in castedViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
+        {
+            <p>@goal.Goal</p>
+        }
         <label for="goal">New Goal :</label>
-        <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Current goal for today: @viewModel.TodaysGoal?.Goal"/>
+        <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Enter new goal"/>
 
         <br/>
         <button type="submit">Update</button>
     </form>
-}
-
-@code {
-    protected async override Task OnInitializedAsync()
-    {
-        await viewModel.LoadTodayStepgoals(); // Load today's goals
-    }
-
-    private async Task UpdateGoal(int updatedGoalValue)
-    {
-        // Assuming you have a property for today's goal ID in the view model
-        var todayGoalId = viewModel.TodaysGoal?.Id; // Access ID from today's goal
-    
-        if (todayGoalId.HasValue)
-        {
-            var updatedGoal = new StepgoalModel
-            {
-                Id = todayGoalId.Value,  // Use retrieved ID
-                Goal = updatedGoalValue,  // Use updated goal value
-                Date = viewModel.Date,   // Assuming date remains unchanged
-                Progress = viewModel.Progress, // Assuming progress is relevant
-                Achieved = viewModel.Achieved  // Assuming achieved is relevant
-            };
-
-            await viewModel.UpdateStepgoal(updatedGoal);
-
-            if (viewModel.IsSuccessful)
-            {
-                // Redirect to home page after successful update
-                Navigation.NavigateTo("/home");
-            }
-            else
-            {
-                // Display error message based on IsSuccessful and ErrorMessage
-            }
-        }
-        else
-        {
-            // Handle case where no ID is found for today's goal
-        }
-    }
 }
