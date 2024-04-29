@@ -2,6 +2,8 @@
 using System.Net.Http.Json;
 using maui.Components.Models;
 using System.Linq;
+using maui.components.ViewModels;
+
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
@@ -13,6 +15,8 @@ public class StepgoalViewModel : INotifyPropertyChanged
     private int _progress = 0;
     private bool _achieved = false;
     public bool IsSuccessful { get; set; }
+    public StepgoalModel TodaysGoal { get; private set; }
+
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -156,6 +160,17 @@ public class StepgoalViewModel : INotifyPropertyChanged
     //update works not yet
     public async Task UpdateStepgoal(StepgoalModel updatedGoal)
     {
+        // Ensure the updatedGoal object has a valid ID
+        if (updatedGoal.Id <= 0)
+        {
+            Console.WriteLine("Error: Updated goal has no valid ID.");
+            IsSuccessful = false;
+            ErrorMessage = "Error updating goal: Invalid ID."; // Set error message
+            return;
+        }
+
+        var updatedGoalValue = this.Goal; // Capture the current goal value
+
         // Construct the update URL with the goal ID
         var updateUrl = $"http://localhost:5041/api/stepgoals/{updatedGoal.Id}";
 
@@ -168,18 +183,22 @@ public class StepgoalViewModel : INotifyPropertyChanged
             {
                 Console.WriteLine("Stepgoal updated successfully!");
                 Goal = updatedGoal.Goal; // Update local goal value
-                IsSuccessful = true;  // Set flag for notification
+                IsSuccessful = true;
+                // Optionally, reload today's goals to reflect the update
+                await LoadTodayStepgoals();
             }
             else
             {
                 Console.WriteLine($"Error updating stepgoal: {response.StatusCode}");
-                IsSuccessful = false; // Set flag for error notification
+                IsSuccessful = false;
+                ErrorMessage = $"Error updating goal: {response.StatusCode}"; // Set error message
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
-            IsSuccessful = false; // Set flag for error notification
+            IsSuccessful = false;
+            ErrorMessage = "Error updating goal: Network issue."; // Set error message
         }
     }
     
@@ -196,7 +215,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         }
     }
     
-    public async Task LoadTodayStepgoals() // New method for today's goals
+    public async Task LoadTodayStepgoals()
     {
         try
         {
@@ -204,10 +223,22 @@ public class StepgoalViewModel : INotifyPropertyChanged
             if (allGoals != null)
             {
                 AllStepgoals = allGoals;
-                // Filter for today's goals
-                var todaysGoals = allGoals.Where(sg => sg.Date.Date == DateTime.Today.Date).ToList();
-                IsSuccessful = todaysGoals.Count <= 1; // Check for max 1 goal
-                ErrorMessage = todaysGoals.Count > 1 ? "You have set more than 1 step goal for today. Please keep it to 1 or less." : "";
+
+                // Get the first goal for today (if any)
+                var todaysGoal = allGoals.FirstOrDefault(sg => sg.Date.Date == DateTime.Today.Date);
+
+                if (todaysGoal != null)
+                {
+                    IsSuccessful = true;
+                    TodaysGoal = todaysGoal;  // Set todaysGoal property
+                    Goal = todaysGoal.Goal; // Update Goal property for the form
+
+                }
+                else
+                {
+                    IsSuccessful = false;  // No goal found for today
+                    ErrorMessage = "";  // Clear any previous error message (optional)
+                }
             }
             else
             {
@@ -220,6 +251,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
             IsSuccessful = false; // Set flag for error
         }
     }
+
 
     /*public bool IsSuccessful { get; private set; } // Flag for successful data retrieval*/
     public string ErrorMessage { get; private set; }
