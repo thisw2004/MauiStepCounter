@@ -1,41 +1,71 @@
 ﻿@page "/UpdateStepgoal"
 @using maui.Components.Models
 @inject StepgoalViewModel viewModel
+@inject NavigationManager Navigation
 
-<h1>Update Step Goal</h1>
+<h1>Update Today's Step Goal</h1>
 
-@if (viewModel.Goal > 0)
+@if (!viewModel.IsSuccessful)
 {
-    <form @submit="@(() => UpdateGoal())">
-        <label for="goal">New Goal:</label>
-        <input type="number" id="goal" @bind-value="viewModel.Goal" />
-        <button type="submit">Update</button>
-    </form>
+    <p>Error fetching step goal. Please try again later.</p>
 }
-else
+else if (!viewModel.IsSuccessful && viewModel.ErrorMessage != "")
+{
+    <p>@viewModel.ErrorMessage</p>
+}
+else if (!viewModel.IsSuccessful)
 {
     <p>No step goal found for today.</p>
 }
+else
+{
+    <form @submit="@(() => UpdateGoal(viewModel.Goal))">
+        <p>Current goal for today:@viewModel.TodaysGoal?.Goal</p>
+        <label for="goal">New Goal :</label>
+        <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Current goal for today: @viewModel.TodaysGoal?.Goal"/>
+
+        <br/>
+        <button type="submit">Update</button>
+    </form>
+}
 
 @code {
-    [Parameter]
-    public int GoalId { get; set; }  // Added parameter to receive goal ID
-    private readonly NavigationManager _navigationManager;
-    protected async Task UpdateGoal()
+    protected async override Task OnInitializedAsync()
     {
-        await viewModel.UpdateStepgoal(new StepgoalModel
-        {
-            Id = GoalId,  // Use received GoalId for update
-            Goal = viewModel.Goal,
-            Date = viewModel.Date,
-            Progress = viewModel.Progress,
-            Achieved = viewModel.Achieved
-        });
+        await viewModel.LoadTodayStepgoals(); // Load today's goals
+    }
 
-        if (viewModel.IsSuccessful)
+    private async Task UpdateGoal(int updatedGoalValue)
+    {
+        // Assuming you have a property for today's goal ID in the view model
+        var todayGoalId = viewModel.TodaysGoal?.Id; // Access ID from today's goal
+    
+        if (todayGoalId.HasValue)
         {
-            // Redirect to home page after successful update
-            _navigationManager.NavigateTo("/home");
+            var updatedGoal = new StepgoalModel
+            {
+                Id = todayGoalId.Value,  // Use retrieved ID
+                Goal = updatedGoalValue,  // Use updated goal value
+                Date = viewModel.Date,   // Assuming date remains unchanged
+                Progress = viewModel.Progress, // Assuming progress is relevant
+                Achieved = viewModel.Achieved  // Assuming achieved is relevant
+            };
+
+            await viewModel.UpdateStepgoal(updatedGoal);
+
+            if (viewModel.IsSuccessful)
+            {
+                // Redirect to home page after successful update
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                // Display error message based on IsSuccessful and ErrorMessage
+            }
+        }
+        else
+        {
+            // Handle case where no ID is found for today's goal
         }
     }
 }
