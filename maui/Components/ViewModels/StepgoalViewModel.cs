@@ -154,34 +154,44 @@ public class StepgoalViewModel : INotifyPropertyChanged
     }
     
     //update works not yet
-    public async Task UpdateStepgoal(StepgoalModel updatedGoal)
+    public async Task UpdateStepgoal()
     {
-        // Construct the update URL with the goal ID
-        var updateUrl = $"http://localhost:5041/api/stepgoals/{updatedGoal.Id}";
-
-        try
+        if (GoalToUpdate != null)
         {
-            var content = JsonContent.Create(updatedGoal);
-            var response = await _httpClient.PutAsync(updateUrl, content);
+            var updateUrl = $"http://localhost:5041/api/stepgoals/{GoalToUpdate.Id}";
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-                Console.WriteLine("Stepgoal updated successfully!");
-                Goal = updatedGoal.Goal; // Update local goal value
-                IsSuccessful = true;  // Set flag for notification
+                var updatedGoal = new StepgoalModel { Goal = Goal };
+                var content = JsonContent.Create(updatedGoal);
+                var response = await _httpClient.PutAsync(updateUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Stepgoal updated successfully!");
+                    IsSuccessful = true;  // Set flag for notification
+                }
+                else
+                {
+                    Console.WriteLine($"Error updating stepgoal: {response.StatusCode}");
+                    IsSuccessful = false; // Set flag for error notification
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error updating stepgoal: {response.StatusCode}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 IsSuccessful = false; // Set flag for error notification
             }
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            IsSuccessful = false; // Set flag for error notification
+            // Handle case where no goal found for today (optional)
+            Console.WriteLine("No stepgoal found for today.");
         }
     }
+
+
+
     
     
     
@@ -195,7 +205,8 @@ public class StepgoalViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(AllStepgoals));
         }
     }
-    
+    public StepgoalModel GoalToUpdate { get; private set; }
+
     public async Task LoadTodayStepgoals() // New method for today's goals
     {
         try
@@ -208,6 +219,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 var todaysGoals = allGoals.Where(sg => sg.Date.Date == DateTime.Today.Date).ToList();
                 IsSuccessful = todaysGoals.Count <= 1; // Check for max 1 goal
                 ErrorMessage = todaysGoals.Count > 1 ? "You have set more than 1 step goal for today. Please keep it to 1 or less." : "";
+                GoalToUpdate = todaysGoals.FirstOrDefault();
             }
             else
             {

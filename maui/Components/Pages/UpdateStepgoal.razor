@@ -19,14 +19,15 @@ else if (!viewModel.IsSuccessful)
 }
 else
 {
-    // Cast the viewmodel to access the private property (if type is known)
     var castedViewModel = (StepgoalViewModel)viewModel;
 
-    <form @submit="@(() => { 
-              var goal = castedViewModel.AllStepgoals.FirstOrDefault(sg => sg.Date.Date == DateTime.Today.Date)?.Goal ?? 0;
-              return viewModel.UpdateStepgoal(new StepgoalModel { Goal = goal }); 
-          })"
->        <p>Current goal(s) for today:</p>
+    <form @submit="@(() => {  // No method call here
+                       // Handle form submission logic (optional)
+                       return Task.CompletedTask;
+                   })">
+        <input type="hidden" value="@viewModel.GoalToUpdate?.Id" />
+
+        <p>Current goal(s) for today:</p>
         @foreach (var goal in castedViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
         {
             <p>@goal.Goal</p>
@@ -35,6 +36,14 @@ else
         <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Enter new goal"/>
 
         <br/>
-        <button type="submit">Update</button>
+        <button type="submit" @onclick="viewModel.UpdateStepgoal">Update</button>
+
     </form>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await viewModel.LoadTodayStepgoals();
+    }
 }
