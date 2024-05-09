@@ -33,7 +33,8 @@ namespace maui.components.ViewModels
                 var json = JsonSerializer.Serialize(loginDto);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await httpClient.PostAsync("http://localhost:5041/api/account/login", content);
+                //added dev tunnel for working in android and other xamarin using platforms (like ios)
+                var response = await httpClient.PostAsync("https://9xcbz73g-5041.euw.devtunnels.ms/api/account/login", content);
                 
                 if (response.IsSuccessStatusCode)
                 {
