@@ -1,0 +1,73 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\obj\\Debug\\net8.0-android\\scopedcss\\bundle\\maui.styles.css",
+      "PackagePath": "staticwebassets\\maui.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\add.png",
+      "PackagePath": "staticwebassets\\Icons\\add.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\auth.jpg",
+      "PackagePath": "staticwebassets\\Icons\\auth.jpg"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\cross.png",
+      "PackagePath": "staticwebassets\\Icons\\cross.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\edit.png",
+      "PackagePath": "staticwebassets\\Icons\\edit.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\lock.png",
+      "PackagePath": "staticwebassets\\Icons\\lock.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\Icons\\share.png",
+      "PackagePath": "staticwebassets\\Icons\\share.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\WindowsNotifcations.js",
+      "PackagePath": "staticwebassets\\WindowsNotifcations.js"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\thirz\\RiderProjects\\maui\\maui\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-android\\staticwebassets\\msbuild.build.maui.props",
+      "PackagePath": "build\\maui.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-android\\staticwebassets\\msbuild.buildMultiTargeting.maui.props",
+      "PackagePath": "buildMultiTargeting\\maui.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-android\\staticwebassets\\msbuild.buildTransitive.maui.props",
+      "PackagePath": "buildTransitive\\maui.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-android\\staticwebassets\\msbuild.maui.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
