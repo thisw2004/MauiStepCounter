@@ -50,7 +50,7 @@ namespace maui.components.ViewModels
         {
             try
             {
-                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>("http://localhost:5041/api/blogs");
+                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>(" https://sjj4fhvm-5041.euw.devtunnels.ms/api/blogs");
                 if (blogs != null)
                     Blogs = blogs.ToList();
             }

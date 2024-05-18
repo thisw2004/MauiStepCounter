@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using maui.Components.Models;
 using System.Linq;
+/*using ABI.Windows.Devices.Sensors;*/
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
@@ -20,6 +21,16 @@ public class StepgoalViewModel : INotifyPropertyChanged
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _progress = 0; // Initialize progress to 0 by default
+    }
+    
+    public void StartCounting()
+    {
+        Plugin.Maui.Pedometer.Pedometer.ReadingChanged += (sender, reading) =>
+        {
+            Console.WriteLine(reading.NumberOfSteps);
+        };
+
+        Plugin.Maui.Pedometer.Pedometer.Default.Start();
     }
 
     public int Goal
@@ -56,6 +67,10 @@ public class StepgoalViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(Achieved));
         }
     }
+    
+    
+      
+    
 
     public async Task CreateStepgoal()
     {
@@ -70,7 +85,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         try
         {
             var content = JsonContent.Create(stepgoal);
-            var response = await _httpClient.PostAsync("http://localhost:5041/api/stepgoals", content);
+            var response = await _httpClient.PostAsync("https://7mqh6pqj-5041.euw.devtunnels.ms/api/stepgoals", content);
 
             if (response.IsSuccessStatusCode)
             {

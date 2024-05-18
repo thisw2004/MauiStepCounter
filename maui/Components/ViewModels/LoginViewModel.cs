@@ -34,7 +34,7 @@ namespace maui.components.ViewModels
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 //added dev tunnel for working in android and other xamarin using platforms (like ios)
-                var response = await httpClient.PostAsync("https://sjj4fhvm-5041.euw.devtunnels.ms/api/account/login", content);
+                var response = await httpClient.PostAsync(" https://1wfr9jbr-5041.euw.devtunnels.ms/api/account/login", content);
                 
                 if (response.IsSuccessStatusCode)
                 {

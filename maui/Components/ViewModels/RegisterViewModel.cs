@@ -36,7 +36,7 @@ namespace maui.components.ViewModels
                 var json = JsonSerializer.Serialize(RegisterDto);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await httpClient.PostAsync("http://localhost:5041/api/account/register", content);
+                var response = await httpClient.PostAsync("https://sjj4fhvm-5041.euw.devtunnels.ms/api/account/register", content);
 
                 if (response.IsSuccessStatusCode)
                 {

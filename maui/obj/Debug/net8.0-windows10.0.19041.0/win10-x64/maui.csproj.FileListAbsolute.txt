@@ -39,6 +39,8 @@ C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win1
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Essentials.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Graphics.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Graphics.Win2D.WinUI.Desktop.dll
+C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Toolkit.Uwp.Notifications.dll
+C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Win32.SystemEvents.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.InteractiveExperiences.Projection.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WinUI.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.AppLifecycle.Projection.dll
@@ -54,6 +56,9 @@ C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win1
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.Widgets.Projection.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.Net.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Release.Net.dll
+C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugin.LocalNotification.dll
+C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugin.Maui.Pedometer.dll
+C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\System.Drawing.Common.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\System.IO.Pipelines.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\ar\Microsoft.Maui.Controls.resources.dll
 C:\Users\thirz\RiderProjects\maui\maui\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\ca\Microsoft.Maui.Controls.resources.dll
