@@ -1,2 +1,2 @@
-AdbTarget=-s emulator-5554
+AdbTarget=-s adb-c267c223-EpTZYk._adb-tls-connect._tcp
 AdbOptions=
