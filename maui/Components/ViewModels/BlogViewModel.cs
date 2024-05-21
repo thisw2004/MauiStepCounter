@@ -16,6 +16,7 @@ namespace maui.components.ViewModels
         private BlogModel? _selectedBlog; // Added SelectedBlog property
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
 
         public BlogViewModel(HttpClient httpClient)
         {
@@ -50,7 +51,7 @@ namespace maui.components.ViewModels
         {
             try
             {
-                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>("https://dhgq9c2g-5041.euw.devtunnels.ms/api/blogs");
+                var blogs = await _httpClient.GetFromJsonAsync<IEnumerable<BlogModel>>(Url+"/api/blogs");
                 if (blogs != null)
                     Blogs = blogs.ToList();
             }
@@ -65,7 +66,7 @@ namespace maui.components.ViewModels
         {
             try
             {
-                var response = await _httpClient.GetAsync($"http://localhost:5041/api/blogs/{id}");
+                var response = await _httpClient.GetAsync($"{Url}/api/blogs/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {

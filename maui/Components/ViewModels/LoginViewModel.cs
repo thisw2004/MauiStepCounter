@@ -19,6 +19,7 @@ namespace maui.components.ViewModels
             _navigationManager = navigationManager;
         }
 
+        private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
         public string? Email { get; set; }
         public string? Password { get; set; }
 
@@ -34,7 +35,7 @@ namespace maui.components.ViewModels
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 //added dev tunnel for working in android and other xamarin using platforms (like ios)
-                var response = await httpClient.PostAsync("https://dhgq9c2g-5041.euw.devtunnels.ms/api/account/login", content);
+                var response = await httpClient.PostAsync(Url+"/api/account/login", content);
                 
                 if (response.IsSuccessStatusCode)
                 {

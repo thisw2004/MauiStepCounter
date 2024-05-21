@@ -14,6 +14,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     private int _progress = 0;
     private bool _achieved = false;
     private int _numberOfSteps;
+    private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
     public bool IsSuccessful { get; set; }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -99,7 +100,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     {
         try
         {
-            var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>("http://localhost:5041/api/stepgoals");
+            var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>(Url+"/api/stepgoals");
             if (allGoals != null)
             {
                 AllStepgoals = allGoals;
@@ -115,7 +116,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error fetching step goals: {ex.Message}");
             IsSuccessful = false;
         }
     }
@@ -133,7 +134,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         try
         {
             var content = JsonContent.Create(stepgoal);
-            var response = await _httpClient.PostAsync("https://7mqh6pqj-5041.euw.devtunnels.ms/api/stepgoals", content);
+            var response = await _httpClient.PostAsync(Url+"/api/stepgoals", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -157,7 +158,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     public async Task DeleteTodaysGoals()
     {
         var today = DateTime.Today;
-        var url = "http://localhost:5041/api/stepgoals";
+        var url = Url+"/api/stepgoals";
 
         try
         {
@@ -177,7 +178,8 @@ public class StepgoalViewModel : INotifyPropertyChanged
 
             foreach (var goal in todaysGoals)
             {
-                var deleteUrl = $"http://localhost:5041/api/stepgoals/{goal.Id}";
+                var deleteUrl = $"{Url}/api/stepgoals/{goal.Id}";
+
                 var deleteResponse = await _httpClient.DeleteAsync(deleteUrl);
 
                 if (!deleteResponse.IsSuccessStatusCode)
@@ -205,7 +207,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     {
         if (GoalToUpdate != null)
         {
-            var updateUrl = $"http://localhost:5041/api/stepgoals/{GoalToUpdate.Id}";
+            var updateUrl = $"{Url}/api/stepgoals/{GoalToUpdate.Id}";
 
             try
             {

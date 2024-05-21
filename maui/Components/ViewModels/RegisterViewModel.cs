@@ -23,7 +23,9 @@ namespace maui.components.ViewModels
         public string Email { get; set; }
         public string Password { get; set; }
         public string Username { get; set; }
-        
+
+        private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
+
         /*??*/
         public event EventHandler<string> WhenRegisterSuccesful; // Event for successful register
 
@@ -36,7 +38,7 @@ namespace maui.components.ViewModels
                 var json = JsonSerializer.Serialize(RegisterDto);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await httpClient.PostAsync("https://sjj4fhvm-5041.euw.devtunnels.ms/api/account/register", content);
+                var response = await httpClient.PostAsync(Url+"/api/account/register", content);
 
                 if (response.IsSuccessStatusCode)
                 {
