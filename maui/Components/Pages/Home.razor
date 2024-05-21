@@ -21,8 +21,11 @@
 <h2>@today</h2>
 
 <p>Number of steps walked: @ViewModel.NumberOfSteps</p>
+@*select today's goal*@
+@*als current steps == goal toon gehaald melding*@
+@*als kawrt of helft is toon motivatie melding*@
 
-<button @onclick="SendGoalReachedNotification">Refresh</button>
+<button>Refresh</button> 
 <button @onclick="ViewModel.StartCounting">Start Counting Steps</button>
 
 <p>Your step goals for today:</p>
@@ -37,11 +40,44 @@ else
     if (ViewModel.AllStepgoals?.Any(sg => sg.Date.Date == DateTime.Today.Date) == true)
     {
         <ul>
+            @*select all stepgoals from today... should be one...*@
             @foreach (var goal in ViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
             {
                 <li>
                     @goal.Progress / @goal.Goal steps
                 </li>
+                @if(@ViewModel.NumberOfSteps >= @goal.Goal)
+                {
+                    /*show melding goal reached*/
+                    var request = new NotificationRequest
+                    {
+                        NotificationId = 1000,
+                        Title = "You have reached your goal!",
+                        Subtitle = "subtitle",
+                        Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                        BadgeNumber = 10,
+                    };
+                    
+                }
+                /*
+                melding ieder kwart
+                */
+                @*@if(@goal.Goal /2  == @goal.Goal)
+                {
+                    /*show melding goal reached*/
+                    var request = new NotificationRequest
+                    {
+                        NotificationId = 1000,
+                        Title = "You have reached your goal!",
+                        Subtitle = "subtitle",
+                        Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                        BadgeNumber = 10,
+                    };
+                    *@
+                    
+                }
+                
+                
             }
         </ul>
         @if (ViewModel.AllStepgoals.Count > 1)
@@ -57,11 +93,13 @@ else
     }
 }
 
+<!-- Add the test button here -->
+<button @onclick="SendGoalReachedNotification">Test Notification</button>
+
 @code {
     protected override async Task OnInitializedAsync()
     {
         await ViewModel.LoadTodayStepgoals();
-        await SendGoalReachedNotification();
     }
 
     private async Task SendGoalReachedNotification()
