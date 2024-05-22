@@ -328,7 +328,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 Subtitle = "Progress Update",
                 Description = message,
                 BadgeNumber = 1,
-                Schedule = null
+                
             };
 
             await LocalNotificationCenter.Current.Show(request);
