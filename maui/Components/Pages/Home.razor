@@ -25,7 +25,7 @@
 @*als current steps == goal toon gehaald melding*@
 @*als kawrt of helft is toon motivatie melding*@
 
-<button>Refresh</button> 
+<button>Refresh</button>
 <button @onclick="ViewModel.StartCounting">Start Counting Steps</button>
 
 <p>Your step goals for today:</p>
@@ -46,38 +46,82 @@ else
                 <li>
                     @goal.Progress / @goal.Goal steps
                 </li>
-                @if(@ViewModel.NumberOfSteps >= @goal.Goal)
+                @if (@ViewModel.NumberOfSteps >= @goal.Goal)
                 {
                     /*show melding goal reached*/
                     var request = new NotificationRequest
-                    {
-                        NotificationId = 1000,
-                        Title = "You have reached your goal!",
-                        Subtitle = "subtitle",
-                        Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                        BadgeNumber = 10,
-                    };
-                    
+                            {
+                                NotificationId = 1000,
+                                Title = "You have reached your goal!",
+                                Subtitle = "subtitle",
+                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                                BadgeNumber = 10,
+                            };
+                    /*and TODO: update progress to db*/
                 }
                 /*
                 melding ieder kwart
                 */
-                @*@if(@goal.Goal /2  == @goal.Goal)
+
+                //TODO: change melding text
+                //melding op eerste kwart
+                @if (@ViewModel.NumberOfSteps == @goal.Goal / 4)
                 {
                     /*show melding goal reached*/
                     var request = new NotificationRequest
-                    {
-                        NotificationId = 1000,
-                        Title = "You have reached your goal!",
-                        Subtitle = "subtitle",
-                        Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                        BadgeNumber = 10,
-                    };
-                    *@
-                    
+                            {
+                                NotificationId = 1000,
+                                Title = "You're on 1/4!",
+                                Subtitle = "subtitle",
+                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                                BadgeNumber = 10,
+                            };
+
                 }
-                
-                
+                //melding if helft van stappendoel is reached
+                @if (@ViewModel.NumberOfSteps == @goal.Goal / 2)
+                {
+                    /*show melding goal reached*/
+                    var request = new NotificationRequest
+                            {
+                                NotificationId = 1000,
+                                Title = "You're on 1/2!",
+                                Subtitle = "subtitle",
+                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                                BadgeNumber = 10,
+                            };
+
+                }
+                //melding op 3/4
+                @if (@ViewModel.NumberOfSteps >= (@goal.Goal / 4) * 3)
+                {
+                    /*show melding goal reached*/
+                    var request = new NotificationRequest
+                            {
+                                NotificationId = 1000,
+                                Title = "You are almost there (3/4)!",
+                                Subtitle = "subtitle",
+                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                                BadgeNumber = 10,
+                            };
+                    /*and TODO: update progress to db*/
+                }
+                //mleding if goal is reached
+                @if (@ViewModel.NumberOfSteps >= @goal.Goal)
+                {
+                    /*show melding goal reached*/
+                    var request = new NotificationRequest
+                            {
+                                NotificationId = 1000,
+                                Title = "You have reached your goal!",
+                                Subtitle = "subtitle",
+                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                                BadgeNumber = 10,
+                            };
+                    /*and TODO: update progress to db*/
+                }
+
+
             }
         </ul>
         @if (ViewModel.AllStepgoals.Count > 1)
@@ -94,7 +138,7 @@ else
 }
 
 <!-- Add the test button here -->
-<button @onclick="SendGoalReachedNotification">Test Notification</button>
+@* <button @onclick="SendGoalReachedNotification">Test Notification</button> *@
 
 @code {
     protected override async Task OnInitializedAsync()
@@ -105,24 +149,14 @@ else
     private async Task SendGoalReachedNotification()
     {
         var request = new NotificationRequest
-        {
-            NotificationId = 1000,
-            Title = "You have reached your goal!",
-            Subtitle = "subtitle",
-            Description = "Hey! Recently you've reached your goal! Wanna check out?",
-            BadgeNumber = 10,
-        };
+            {
+                NotificationId = 1000,
+                Title = "You have reached your goal!",
+                Subtitle = "subtitle",
+                Description = "Hey! Recently you've reached your goal! Wanna check out?",
+                BadgeNumber = 10,
+            };
+        await LocalNotificationCenter.Current.Show(request);
 
-        // Uncomment below lines if using LocalNotificationCenter
-        /*
-        try
-        {
-            await LocalNotificationCenter.Current.Show(request);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error showing notification: {ex.Message}");
-        }
-        */
     }
 }

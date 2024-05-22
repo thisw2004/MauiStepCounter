@@ -14,7 +14,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     private int _progress = 0;
     private bool _achieved = false;
     private int _numberOfSteps;
-    private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
+    private string Url = "https://3gtfp6xc-5041.euw.devtunnels.ms";
     public bool IsSuccessful { get; set; }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -100,7 +100,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     {
         try
         {
-            var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>(Url+"/api/stepgoals");
+            var allGoals = await _httpClient.GetFromJsonAsync<List<StepgoalModel>>(Url + "/api/stepgoals");
             if (allGoals != null)
             {
                 AllStepgoals = allGoals;
@@ -134,7 +134,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
         try
         {
             var content = JsonContent.Create(stepgoal);
-            var response = await _httpClient.PostAsync(Url+"/api/stepgoals", content);
+            var response = await _httpClient.PostAsync(Url + "/api/stepgoals", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -158,7 +158,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     public async Task DeleteTodaysGoals()
     {
         var today = DateTime.Today;
-        var url = Url+"/api/stepgoals";
+        var url = Url + "/api/stepgoals";
 
         try
         {

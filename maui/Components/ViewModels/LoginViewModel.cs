@@ -19,7 +19,7 @@ namespace maui.components.ViewModels
             _navigationManager = navigationManager;
         }
 
-        private string Url = "https://gwl8lrgg-5041.euw.devtunnels.ms";
+        private string Url = "https://3gtfp6xc-5041.euw.devtunnels.ms";
         public string? Email { get; set; }
         public string? Password { get; set; }
 
