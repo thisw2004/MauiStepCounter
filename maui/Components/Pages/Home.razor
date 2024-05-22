@@ -21,12 +21,16 @@
 <h2>@today</h2>
 
 <p>Number of steps walked: @ViewModel.NumberOfSteps</p>
-@*select today's goal*@
-@*als current steps == goal toon gehaald melding*@
-@*als kawrt of helft is toon motivatie melding*@
+<p>Steps remaining to reach goal: @ViewModel.StepsRemaining</p>
 
-<button>Refresh</button>
-<button @onclick="ViewModel.StartCounting">Start Counting Steps</button>
+@if (ViewModel.StepsRemaining <= 0)
+{
+    <p>You have reached your goal!</p>
+}
+else
+{
+    <p>Keep going!</p>
+}
 
 <p>Your step goals for today:</p>
 
@@ -40,11 +44,10 @@ else
     if (ViewModel.AllStepgoals?.Any(sg => sg.Date.Date == DateTime.Today.Date) == true)
     {
         <ul>
-            @*select all stepgoals from today... should be one...*@
             @foreach (var goal in ViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
             {
                 <li>
-                    @goal.Goal steps
+                    @goal.Progress / @goal.Goal steps
                 </li>
             }
         </ul>
@@ -61,25 +64,9 @@ else
     }
 }
 
-<!-- Add the test button here -->
-@* <button @onclick="SendGoalReachedNotification">Test Notification</button> *@
-
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await ViewModel.LoadTodayStepgoals();
-    }
-
-    private async Task SendGoalReachedNotification()
-    {
-        var request = new NotificationRequest
-            {
-                NotificationId = 1000,
-                Title = "You have reached your goal!",
-                Subtitle = "subtitle",
-                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                BadgeNumber = 10,
-            };
-        await LocalNotificationCenter.Current.Show(request);
+        await ViewModel.LoadTodayStepgoalsAndStartCounting();
     }
 }

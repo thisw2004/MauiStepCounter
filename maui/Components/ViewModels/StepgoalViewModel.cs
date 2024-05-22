@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Net.Http.Json;
 using maui.Components.Models;
-using Plugin.Maui.Pedometer;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Plugin.LocalNotification;
+using Plugin.Maui.Pedometer;
+using System.Threading.Tasks;
+using System;
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
@@ -35,6 +37,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
             {
                 _goal = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(StepsRemaining));
             }
         }
     }
@@ -76,8 +79,18 @@ public class StepgoalViewModel : INotifyPropertyChanged
             {
                 _numberOfSteps = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(StepsRemaining));
                 CheckMilestones(); // Check and send notifications when steps are updated
             }
+        }
+    }
+
+    public int StepsRemaining
+    {
+        get
+        {
+            int remaining = Goal - NumberOfSteps;
+            return remaining < 0 ? 0 : remaining;
         }
     }
 
@@ -110,6 +123,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 IsSuccessful = todaysGoals.Count <= 1;
                 ErrorMessage = todaysGoals.Count > 1 ? "You have set more than 1 step goal for today. Please keep it to 1 or less." : "";
                 GoalToUpdate = todaysGoals.FirstOrDefault();
+                Goal = GoalToUpdate?.Goal ?? 0;
             }
             else
             {
@@ -239,62 +253,90 @@ public class StepgoalViewModel : INotifyPropertyChanged
             Console.WriteLine("No stepgoal found for today.");
         }
     }
-
+    public async Task LoadTodayStepgoalsAndStartCounting()
+    {
+        try
+        {
+            await LoadTodayStepgoals();
+            StartCounting();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading step goals and starting counting: {ex.Message}");
+        }
+    }
     public void StartCounting()
     {
-        Pedometer.ReadingChanged += (sender, reading) =>
+        try
         {
-            NumberOfSteps = reading.NumberOfSteps;
-            Console.WriteLine(reading.NumberOfSteps);
-        };
+            Pedometer.ReadingChanged += (sender, reading) =>
+            {
+                // Ensure updates to UI are on the main thread
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    NumberOfSteps = reading.NumberOfSteps;
+                    Console.WriteLine(reading.NumberOfSteps);
+                });
+            };
 
-        Pedometer.Default.Start();
+            Pedometer.Default.Start();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error starting pedometer: {ex.Message}");
+        }
     }
 
     private async void CheckMilestones()
     {
-        if (AllStepgoals == null || !AllStepgoals.Any(sg => sg.Date.Date == DateTime.Today.Date))
-        {
-            return;
-        }
+        if (GoalToUpdate == null) return;
 
-        var todayGoal = AllStepgoals.First(sg => sg.Date.Date == DateTime.Today.Date);
-
-        if (NumberOfSteps >= todayGoal.Goal)
+        try
         {
-            await ShowNotification("You have reached your goal!", "Hey! Recently you've reached your goal! Wanna check out?");
-            todayGoal.Progress = todayGoal.Goal; // Update the progress in the goal
+            if (NumberOfSteps >= GoalToUpdate.Goal && !Achieved)
+            {
+                Achieved = true;
+                await ShowNotification("You have reached your goal!", "Hey! Recently you've reached your goal! Wanna check out?");
+            }
+            else if (NumberOfSteps >= (GoalToUpdate.Goal / 4) && NumberOfSteps < (GoalToUpdate.Goal / 2))
+            {
+                await ShowNotification("You're on 1/4!", "Keep going! You're doing great!");
+            }
+            else if (NumberOfSteps >= (GoalToUpdate.Goal / 2) && NumberOfSteps < ((GoalToUpdate.Goal / 4) * 3))
+            {
+                await ShowNotification("You're on 1/2!", "Halfway there! Keep pushing!");
+            }
+            else if (NumberOfSteps >= ((GoalToUpdate.Goal / 4) * 3) && NumberOfSteps < GoalToUpdate.Goal)
+            {
+                await ShowNotification("You are almost there (3/4)!", "Just a little more to reach your goal!");
+            }
         }
-        else if (NumberOfSteps >= (todayGoal.Goal * 3 / 4))
+        catch (Exception ex)
         {
-            await ShowNotification("You are almost there (3/4)!", "You're on 3/4! Keep going!");
-        }
-        else if (NumberOfSteps >= (todayGoal.Goal / 2))
-        {
-            await ShowNotification("You're halfway there (1/2)!", "You're halfway to your goal!");
-        }
-        else if (NumberOfSteps >= (todayGoal.Goal / 4))
-        {
-            await ShowNotification("You're on 1/4!", "You've reached 1/4 of your goal!");
+            Console.WriteLine($"Error checking milestones: {ex.Message}");
         }
     }
 
-    private async Task ShowNotification(string title, string description)
+    private async Task ShowNotification(string title, string message)
     {
-        var request = new NotificationRequest
+        try
         {
-            NotificationId = 1000,
-            Title = title,
-            Subtitle = "Step Goal Progress",
-            Description = description,
-            BadgeNumber = 1,
-            Schedule = new NotificationRequestSchedule
+            var request = new NotificationRequest
             {
-                NotifyTime = DateTime.Now.AddSeconds(5) // Schedule notification to be shown in 5 seconds
-            }
-        };
+                NotificationId = new Random().Next(1000, 9999),
+                Title = title,
+                Subtitle = "Progress Update",
+                Description = message,
+                BadgeNumber = 1,
+                Schedule = null
+            };
 
-        await LocalNotificationCenter.Current.Show(request);
+            await LocalNotificationCenter.Current.Show(request);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing notification: {ex.Message}");
+        }
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
