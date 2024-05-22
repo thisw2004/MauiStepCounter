@@ -44,84 +44,8 @@ else
             @foreach (var goal in ViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
             {
                 <li>
-                    @goal.Progress / @goal.Goal steps
+                    @goal.Goal steps
                 </li>
-                @if (@ViewModel.NumberOfSteps >= @goal.Goal)
-                {
-                    /*show melding goal reached*/
-                    var request = new NotificationRequest
-                            {
-                                NotificationId = 1000,
-                                Title = "You have reached your goal!",
-                                Subtitle = "subtitle",
-                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                                BadgeNumber = 10,
-                            };
-                    /*and TODO: update progress to db*/
-                }
-                /*
-                melding ieder kwart
-                */
-
-                //TODO: change melding text
-                //melding op eerste kwart
-                @if (@ViewModel.NumberOfSteps == @goal.Goal / 4)
-                {
-                    /*show melding goal reached*/
-                    var request = new NotificationRequest
-                            {
-                                NotificationId = 1000,
-                                Title = "You're on 1/4!",
-                                Subtitle = "subtitle",
-                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                                BadgeNumber = 10,
-                            };
-
-                }
-                //melding if helft van stappendoel is reached
-                @if (@ViewModel.NumberOfSteps == @goal.Goal / 2)
-                {
-                    /*show melding goal reached*/
-                    var request = new NotificationRequest
-                            {
-                                NotificationId = 1000,
-                                Title = "You're on 1/2!",
-                                Subtitle = "subtitle",
-                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                                BadgeNumber = 10,
-                            };
-
-                }
-                //melding op 3/4
-                @if (@ViewModel.NumberOfSteps >= (@goal.Goal / 4) * 3)
-                {
-                    /*show melding goal reached*/
-                    var request = new NotificationRequest
-                            {
-                                NotificationId = 1000,
-                                Title = "You are almost there (3/4)!",
-                                Subtitle = "subtitle",
-                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                                BadgeNumber = 10,
-                            };
-                    /*and TODO: update progress to db*/
-                }
-                //mleding if goal is reached
-                @if (@ViewModel.NumberOfSteps >= @goal.Goal)
-                {
-                    /*show melding goal reached*/
-                    var request = new NotificationRequest
-                            {
-                                NotificationId = 1000,
-                                Title = "You have reached your goal!",
-                                Subtitle = "subtitle",
-                                Description = "Hey! Recently you've reached your goal! Wanna check out?",
-                                BadgeNumber = 10,
-                            };
-                    /*and TODO: update progress to db*/
-                }
-
-
             }
         </ul>
         @if (ViewModel.AllStepgoals.Count > 1)
@@ -157,6 +81,5 @@ else
                 BadgeNumber = 10,
             };
         await LocalNotificationCenter.Current.Show(request);
-
     }
 }

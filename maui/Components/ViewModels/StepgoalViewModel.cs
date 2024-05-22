@@ -4,6 +4,7 @@ using maui.Components.Models;
 using Plugin.Maui.Pedometer;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Plugin.LocalNotification;
 
 public class StepgoalViewModel : INotifyPropertyChanged
 {
@@ -75,6 +76,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
             {
                 _numberOfSteps = value;
                 OnPropertyChanged();
+                CheckMilestones(); // Check and send notifications when steps are updated
             }
         }
     }
@@ -247,6 +249,52 @@ public class StepgoalViewModel : INotifyPropertyChanged
         };
 
         Pedometer.Default.Start();
+    }
+
+    private async void CheckMilestones()
+    {
+        if (AllStepgoals == null || !AllStepgoals.Any(sg => sg.Date.Date == DateTime.Today.Date))
+        {
+            return;
+        }
+
+        var todayGoal = AllStepgoals.First(sg => sg.Date.Date == DateTime.Today.Date);
+
+        if (NumberOfSteps >= todayGoal.Goal)
+        {
+            await ShowNotification("You have reached your goal!", "Hey! Recently you've reached your goal! Wanna check out?");
+            todayGoal.Progress = todayGoal.Goal; // Update the progress in the goal
+        }
+        else if (NumberOfSteps >= (todayGoal.Goal * 3 / 4))
+        {
+            await ShowNotification("You are almost there (3/4)!", "You're on 3/4! Keep going!");
+        }
+        else if (NumberOfSteps >= (todayGoal.Goal / 2))
+        {
+            await ShowNotification("You're halfway there (1/2)!", "You're halfway to your goal!");
+        }
+        else if (NumberOfSteps >= (todayGoal.Goal / 4))
+        {
+            await ShowNotification("You're on 1/4!", "You've reached 1/4 of your goal!");
+        }
+    }
+
+    private async Task ShowNotification(string title, string description)
+    {
+        var request = new NotificationRequest
+        {
+            NotificationId = 1000,
+            Title = title,
+            Subtitle = "Step Goal Progress",
+            Description = description,
+            BadgeNumber = 1,
+            Schedule = new NotificationRequestSchedule
+            {
+                NotifyTime = DateTime.Now.AddSeconds(5) // Schedule notification to be shown in 5 seconds
+            }
+        };
+
+        await LocalNotificationCenter.Current.Show(request);
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
