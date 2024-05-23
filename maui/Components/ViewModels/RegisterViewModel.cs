@@ -24,7 +24,7 @@ namespace maui.components.ViewModels
         public string Password { get; set; }
         public string Username { get; set; }
 
-        private string Url = "https://3gtfp6xc-5041.euw.devtunnels.ms";
+        private string Url = "https://3j1vftcr-5041.euw.devtunnels.ms";
 
         /*??*/
         public event EventHandler<string> WhenRegisterSuccesful; // Event for successful register

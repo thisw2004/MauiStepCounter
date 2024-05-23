@@ -17,7 +17,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
     private int _progress = 0;
     private bool _achieved = false;
     private int _numberOfSteps;
-    private string Url = "https://3gtfp6xc-5041.euw.devtunnels.ms";
+    private string Url = "https://3j1vftcr-5041.euw.devtunnels.ms";
     public bool IsSuccessful { get; set; }
 
     public event PropertyChangedEventHandler PropertyChanged;

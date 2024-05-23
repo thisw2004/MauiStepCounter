@@ -8,10 +8,12 @@
 
 @if (ViewModel.SelectedBlog?.Title == null)
 {
+    <button><a href="/home">Back</a></button>
     <p>Loading blog details...</p>
 }
 else
 {
+    <button><a href="/home">Back</a></button>
     @if (ViewModel.SelectedBlog?.Title != null)
     {
         <h2>Title: @ViewModel.SelectedBlog.Title</h2>

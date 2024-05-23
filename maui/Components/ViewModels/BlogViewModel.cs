@@ -16,7 +16,7 @@ namespace maui.components.ViewModels
         private BlogModel? _selectedBlog; // Added SelectedBlog property
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private string Url = "https://3gtfp6xc-5041.euw.devtunnels.ms";
+        private string Url = "https://3j1vftcr-5041.euw.devtunnels.ms";
 
         public BlogViewModel(HttpClient httpClient)
         {
