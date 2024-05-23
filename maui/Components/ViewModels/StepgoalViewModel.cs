@@ -286,6 +286,11 @@ public class StepgoalViewModel : INotifyPropertyChanged
             Console.WriteLine($"Error starting pedometer: {ex.Message}");
         }
     }
+    private bool milestoneNotificationShown = false; // Add this field to keep track of milestone notifications
+    private bool QuarterMilestoneReached = false;
+    private bool HalfMilestoneReached = false;
+    private bool ThreeQuarterMilestoneReached = false;
+
 
     private async void CheckMilestones()
     {
@@ -298,17 +303,20 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 Achieved = true;
                 await ShowNotification("You have reached your goal!", "Hey! Recently you've reached your goal! Wanna check out?");
             }
-            else if (NumberOfSteps >= (GoalToUpdate.Goal / 4) && NumberOfSteps < (GoalToUpdate.Goal / 2))
+            else if (NumberOfSteps >= (GoalToUpdate.Goal / 4) && NumberOfSteps < (GoalToUpdate.Goal / 2) && !QuarterMilestoneReached)
             {
                 await ShowNotification("You're on 1/4!", "Keep going! You're doing great!");
+                QuarterMilestoneReached = true; // Set the flag to indicate that the quarter milestone has been reached
             }
-            else if (NumberOfSteps >= (GoalToUpdate.Goal / 2) && NumberOfSteps < ((GoalToUpdate.Goal / 4) * 3))
+            else if (NumberOfSteps >= (GoalToUpdate.Goal / 2) && NumberOfSteps < ((GoalToUpdate.Goal / 4) * 3) && !HalfMilestoneReached)
             {
                 await ShowNotification("You're on 1/2!", "Halfway there! Keep pushing!");
+                HalfMilestoneReached = true; // Set the flag to indicate that the half milestone has been reached
             }
-            else if (NumberOfSteps >= ((GoalToUpdate.Goal / 4) * 3) && NumberOfSteps < GoalToUpdate.Goal)
+            else if (NumberOfSteps >= ((GoalToUpdate.Goal / 4) * 3) && NumberOfSteps < GoalToUpdate.Goal && !ThreeQuarterMilestoneReached)
             {
                 await ShowNotification("You are almost there (3/4)!", "Just a little more to reach your goal!");
+                ThreeQuarterMilestoneReached = true; // Set the flag to indicate that the three-quarter milestone has been reached
             }
         }
         catch (Exception ex)
@@ -328,7 +336,6 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 Subtitle = "Progress Update",
                 Description = message,
                 BadgeNumber = 1,
-                
             };
 
             await LocalNotificationCenter.Current.Show(request);
@@ -338,6 +345,12 @@ public class StepgoalViewModel : INotifyPropertyChanged
             Console.WriteLine($"Error showing notification: {ex.Message}");
         }
     }
+
+
+    
+
+
+    
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
