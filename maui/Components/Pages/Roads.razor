@@ -1,10 +1,15 @@
 ﻿@page "/Roads"
-<h3>Routes</h3>
-<button><a href="/home">Back</a></button><br/>
-@* refer here to existing routes via websites. no routes in db,in apibut no idea how and why
-*@
-<a style="text-decoration: none" href="https://wandelgidszuidlimburg.com/wp/0001-2/">Wandelroute Reijmerstok,Akkers,weilanden en bossen,8.9km. </a><br/>
-<a style="text-decoration: none" href="https://www.friesland.nl/nl/routes/1999767826/wandelroute-11fountains-sloten">Wandelroute Friesland,Geveltjes,grachten en stenen,1.4km</a><br/>
-<a style="text-decoration: none"  href="https://www.natuurmonumenten.nl/natuurgebieden/nationaal-park-veluwezoom/route/wandelroute-priesnitzhoeve-sprengen-laag-soeren">Wandelroute Veluwezoom,monumenten,rustpunt en bos,7.5km</a><br/>
-<a style="text-decoration: none" href="https://beleefroutes.nl/route/wandelroute-langs-kunst-duinen-bello/">Wandelroute Doetichem,kunst en duinen,6km</a><br/>
-<a style="text-decoration: none" href="https://www.komoot.com/nl-nl/smarttour/4266243">Wandelroute Krimpen aan den Ijssel,recreatiepunt,meer,uitzicht,10.6km</a><br/>
+
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Routes</h2>
+
+        <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;"><a href="/home" style="color: #ffffff; text-decoration: none;">Back</a></button><br />
+
+        <a style="text-decoration: none; margin-bottom: 0.5rem; color: #2e7d32;" href="https://wandelgidszuidlimburg.com/wp/0001-2/">Wandelroute Reijmerstok, Akkers, weilanden en bossen, 8.9km.</a><br />
+        <a style="text-decoration: none; margin-bottom: 0.5rem; color: #2e7d32;" href="https://www.friesland.nl/nl/routes/1999767826/wandelroute-11fountains-sloten">Wandelroute Friesland, Geveltjes, grachten en stenen, 1.4km</a><br />
+        <a style="text-decoration: none; margin-bottom: 0.5rem; color: #2e7d32;" href="https://www.natuurmonumenten.nl/natuurgebieden/nationaal-park-veluwezoom/route/wandelroute-priesnitzhoeve-sprengen-laag-soeren">Wandelroute Veluwezoom, monumenten, rustpunt en bos, 7.5km</a><br />
+        <a style="text-decoration: none; margin-bottom: 0.5rem; color: #2e7d32;" href="https://beleefroutes.nl/route/wandelroute-langs-kunst-duinen-bello/">Wandelroute Doetichem, kunst en duinen, 6km</a><br />
+        <a style="text-decoration: none; margin-bottom: 0.5rem; color: #2e7d32;" href="https://www.komoot.com/nl-nl/smarttour/4266243">Wandelroute Krimpen aan den Ijssel, recreatiepunt, meer, uitzicht, 10.6km</a><br />
+    </main>
+</div>
