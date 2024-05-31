@@ -2,53 +2,64 @@
 @using maui.components.ViewModels
 @using maui.Components.Models
 @using maui.Components.Layout
-@* Remove unnecessary namespace *@
 @inject NavigationManager NavigationManager
 
 @layout LayoutWithoutNav
-<h3>Register</h3>
 
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <p>@ErrorMessage</p>
-}
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    <header style="width: 100%; background-color: #2e7d32; color: #ffffff; padding: 1rem 0; text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <h1 style="margin: 0; font-size: 1.5rem;">StepCounter</h1>
+    </header>
 
-<EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
-    <label for="email" name="email">Email</label>
-    <input type="text" id="email" @bind="registerModel.Email" />
-    <ValidationMessage For="@(() => registerModel.Email)" />
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Register</h2>
 
-    <br/>
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <p style="color: red; margin-bottom: 1rem;">@ErrorMessage</p>
+        }
 
-    <label for="password" name="password">Password</label>
-    <input type="password" id="password" @bind="registerModel.Password" />
-    <ValidationMessage For="@(() => registerModel.Password)" />
+        <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+            <div style="margin-bottom: 1.5rem; width: 100%;">
+                <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">Email</label>
+                <input type="email" id="email" @bind="registerModel.Email" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                <ValidationMessage For="@(() => registerModel.Email)" />
+            </div>
 
-    <br/>
+            <div style="margin-bottom: 1.5rem; width: 100%;">
+                <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">Password</label>
+                <input type="password" id="password" @bind="registerModel.Password" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                <ValidationMessage For="@(() => registerModel.Password)" />
+            </div>
 
-    <label for="username" name="username">Username</label>
-    <input type="text" id="username" @bind="registerModel.Username" />
-    <ValidationMessage For="@(() => registerModel.Username)" />
-    <br/>
+            <div style="margin-bottom: 1.5rem; width: 100%;">
+                <label for="username" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">Username</label>
+                <input type="text" id="username" @bind="registerModel.Username" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                <ValidationMessage For="@(() => registerModel.Username)" />
+            </div>
 
-    <button type="submit">Register</button>
-</EditForm>
-<p>Login <u><a href="/">here</a></u></p>
+            <button type="submit" style="width: 100%; padding: 1rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">Register</button>
+        </EditForm>
+
+        <p style="margin-top: 1rem;">Login <a href="/" style="color: #2e7d32; text-decoration: underline; font-weight: bold;">here</a></p>
+    </main>
+</div>
+
 @code {
-    public RegisterModel registerModel = new RegisterModel(); // Change to public
-    public string ErrorMessage; // Change to public
+    public RegisterModel registerModel { get; set; } = new RegisterModel();
+    public string ErrorMessage { get; set; }
 
-    private async Task HandleRegister() // Correct method name
+    private async Task HandleRegister()
     {
-        var viewModel = new RegisterViewModel(NavigationManager);
-        viewModel.Email = registerModel.Email;
-        viewModel.Password = registerModel.Password;
-        viewModel.Username = registerModel.Username;
+        var viewModel = new RegisterViewModel(NavigationManager)
+            {
+                Email = registerModel.Email,
+                Password = registerModel.Password,
+                Username = registerModel.Username
+            };
 
         var registerResult = await viewModel.Register();
-    
-        ErrorMessage = registerResult ?? "register failed";
-        
-        /*await Shell.Current.GoToAsync("/home");*/
+
+        ErrorMessage = registerResult ?? "Register failed";
     }
 }
