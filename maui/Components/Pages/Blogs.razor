@@ -4,29 +4,42 @@
 @inject BlogViewModel ViewModel
 @inject NavigationManager Navigation
 
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    
 
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Blogs</h2>
 
-<h1>Blogs</h1>
-
-@if (ViewModel.Blogs.Any())
-{
-    <button><a href="/home">Back</a></button>
-    <ul>
-        @foreach (var blog in ViewModel.Blogs)
+        @if (ViewModel.Blogs.Any())
         {
-            <h3><a href="@($"blog/{blog.Id}")" style="text-decoration:none;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a></h3>
-            <div>
-                <a href="mailto:?subject=Check out this blog post!&body=I thought you might be interested in this blog post: %0A@($"http://localhost:5041/blog/{blog.Id}").">
-                    <img alt="share" style="width:50px; height: 50px;" src="./Icons/share.png"/>
-                </a>
-            </div>    
+            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                <a href="/home" style="color: #ffffff; text-decoration: none;">Back</a>
+            </button>
+            <ul style="list-style: none; padding: 0; margin: 0; width: 100%;">
+                @foreach (var blog in ViewModel.Blogs)
+                {
+                    <li style="margin-bottom: 1.5rem;">
+                        <div style="background: #ffffff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #2e7d32;">
+                                    <a href="@($"blog/{blog.Id}")" style="text-decoration: none; color: #2e7d32;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a>
+                                </h3>
+                                <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #757575;">By @blog.Author on @blog.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                            </div>
+                            <a href="mailto:?subject=Check out this blog post!&body=I thought you might be interested in this blog post: %0A@($"http://localhost:5041/blog/{blog.Id}").">
+                                <img alt="share" style="width: 30px; height: 30px; margin-left: 20px;" src="./Icons/share.png" />
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
         }
-    </ul>
-}
-else
-{
-    <p>Loading blogs...</p>
-}
+        else
+        {
+            <p style="color: #2e7d32; font-size: 1.2rem;">Loading blogs...</p>
+        }
+    </main>
+</div>
 
 @code {
     private void NavigateToDetail(int blogId)
