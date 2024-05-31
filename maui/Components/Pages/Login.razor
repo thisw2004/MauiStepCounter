@@ -2,35 +2,42 @@
 @using maui.Components.Layout
 @using maui.components.ViewModels
 @using Models
-@*navigation*@
 @inject NavigationManager NavigationManager
 
 @layout LayoutWithoutNav
-<h3>Login</h3>
 
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    <header style="width: 100%; background-color: #2e7d32; color: #ffffff; padding: 1rem 0; text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <h1 style="margin: 0; font-size: 1.5rem;">StepCounter</h1>
+    </header>
 
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <p>@ErrorMessage</p>
-}
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Login</h2>
 
-<EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
-    <label for="email" name="email">Username</label>
-    <input type="text" id="email" @bind="loginModel.Email" />
-    <ValidationMessage For="@(() => loginModel.Email)" />
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <p style="color: red; margin-bottom: 1rem;">@ErrorMessage</p>
+        }
 
-    <br />
+        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+            <div style="margin-bottom: 1.5rem; width: 100%;">
+                <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">Username</label>
+                <input type="text" id="email" @bind="loginModel.Email" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                <ValidationMessage For="@(() => loginModel.Email)" />
+            </div>
 
-    <label for="password" name="password">Password</label>
-    <input type="password" id="password" @bind="loginModel.Password" />
-    <ValidationMessage For="@(() => loginModel.Password)" />
+            <div style="margin-bottom: 1.5rem; width: 100%;">
+                <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">Password</label>
+                <input type="password" id="password" @bind="loginModel.Password" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
 
-    <br />
+            <button type="submit" style="width: 100%; padding: 1rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">Login</button>
+        </EditForm>
 
-    <button type="submit">Login</button>
-</EditForm>
-
-<p>No account? Register <u><a href="/register">here</a></u></p>
+        <p style="margin-top: 1rem;">No account? Register <a href="/register" style="color: #2e7d32; text-decoration: underline; font-weight: bold;">here</a></p>
+    </main>
+</div>
 
 @code {
     private LoginModel loginModel = new LoginModel();
@@ -38,20 +45,14 @@
 
     private async Task HandleLogin()
     {
-        var viewModel = new LoginViewModel(NavigationManager);
-    viewModel.Email = loginModel.Email;
-    viewModel.Password = loginModel.Password;
+        var viewModel = new LoginViewModel(NavigationManager)
+            {
+                Email = loginModel.Email,
+                Password = loginModel.Password
+            };
 
-    var loginResult = await viewModel.Login();
-    
-    ErrorMessage = loginResult ?? "Login failed";
-    
-    
-   
-    /*await Shell.Current.GoToAsync("/home");*/
+        var loginResult = await viewModel.Login();
+
+        ErrorMessage = loginResult ?? "Login failed";
     }
-    
-    
-    
-    
 }
