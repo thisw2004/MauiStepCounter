@@ -3,43 +3,47 @@
 @inject StepgoalViewModel viewModel
 @inject NavigationManager Navigation
 
-<h1>Update Today's Step Goal</h1>
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    
 
-@if (!viewModel.IsSuccessful)
-{
-    <p>Error fetching step goal. Please try again later.</p>
-}
-else if (!viewModel.IsSuccessful && viewModel.ErrorMessage != "")
-{
-    <p>@viewModel.ErrorMessage</p>
-}
-else if (!viewModel.IsSuccessful)
-{
-    <p>No step goal found for today.</p>
-}
-else
-{
-    var castedViewModel = (StepgoalViewModel)viewModel;
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Update Today's Step Goal</h2>
 
-    <form @submit="@(() => {  // No method call here
-                       // Handle form submission logic (optional)
-                       return Task.CompletedTask;
-                   })">
-        <input type="hidden" value="@viewModel.GoalToUpdate?.Id" />
-
-        <p>Current goal(s) for today:</p>
-        @foreach (var goal in castedViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
+        @if (!viewModel.IsSuccessful)
         {
-            <p>@goal.Goal</p>
+            <p style="color: red; margin-bottom: 1rem;">Error fetching step goal. Please try again later.</p>
         }
-        <label for="goal">New Goal :</label>
-        <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Enter new goal"/>
+        else if (!viewModel.IsSuccessful && !string.IsNullOrEmpty(viewModel.ErrorMessage))
+        {
+            <p style="color: red; margin-bottom: 1rem;">@viewModel.ErrorMessage</p>
+        }
+        else if (!viewModel.IsSuccessful)
+        {
+            <p style="margin-bottom: 1rem; font-size: 1.2rem;">No step goal found for today.</p>
+        }
+        else
+        {
+            var castedViewModel = (StepgoalViewModel)viewModel;
 
-        <br/>
-        <button type="submit" @onclick="viewModel.UpdateStepgoal">Update</button>
+            <form @submit="@(() => { return Task.CompletedTask; })" style="width: 100%;">
+                <input type="hidden" value="@viewModel.GoalToUpdate?.Id" />
 
-    </form>
-}
+                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Current goal(s) for today:</p>
+                @foreach (var goal in castedViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
+                {
+                    <p style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #2e7d32;">@goal.Goal steps</p>
+                }
+
+                <div style="margin-bottom: 1.5rem; width: 100%;">
+                    <label for="goal" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2e7d32;">New Goal:</label>
+                    <input type="number" id="goal" @bind="viewModel.Goal" placeholder="Enter new goal" style="width: 100%; padding: 0.75rem; border: 2px solid #bdbdbd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s;" />
+                </div>
+
+                <button type="submit" @onclick="viewModel.UpdateStepgoal" style="width: 100%; padding: 1rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">Update</button>
+            </form>
+        }
+    </main>
+</div>
 
 @code {
     protected override async Task OnInitializedAsync()
