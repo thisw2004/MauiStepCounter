@@ -1,2 +1,2 @@
-AdbTarget=-s adb-c267c223-EpTZYk._adb-tls-connect._tcp
+AdbTarget=-s 192.168.178.51:5555
 AdbOptions=

@@ -1,87 +1,54 @@
-﻿@page "/blog/{id}"
+﻿@page "/blogs"
 @using maui.components.ViewModels
+@using maui.Components.Models
 @inject BlogViewModel ViewModel
+@inject NavigationManager Navigation
 
 <div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    
+
     <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h1>Blog Detail Page</h1>
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Blogs</h2>
 
-        <p>Blog ID: @Id</p>
-
-        @if (ViewModel.SelectedBlog == null)
+        @if (ViewModel.Blogs.Any())
         {
-            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;"><a href="/home" style="color: #ffffff; text-decoration: none;">Back</a></button>
-            <p>Loading blog details...</p>
+            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                <a href="/home" style="color: #ffffff; text-decoration: none;">Back</a>
+            </button>
+            <ul style="list-style: none; padding: 0; margin: 0; width: 100%;">
+                @foreach (var blog in ViewModel.Blogs)
+                {
+                    <li style="margin-bottom: 1.5rem;">
+                        <div style="background: #ffffff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #2e7d32;">
+                                    <a href="@($"blog/{blog.Id}")" style="text-decoration: none; color: #2e7d32;" @onclick="() => NavigateToDetail(blog.Id)">@blog.Title</a>
+                                </h3>
+                                <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #757575;">By @blog.Author on @blog.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                            </div>
+                            <a href="mailto:?subject=Check out this blog post!&body=I thought you might be interested in this blog post: %0A@($"http://localhost:5041/blog/{blog.Id}").">
+                                <img alt="share" style="width: 30px; height: 30px; margin-left: 20px;" src="./Icons/share.png" />
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
         }
         else
         {
-            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;"><a href="/blogs" style="color: #ffffff; text-decoration: none;">Back</a></button>
-            @if (ViewModel.SelectedBlog.Title != null)
-            {
-                <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: #2e7d32;">Title: @ViewModel.SelectedBlog.Title</h2>
-            }
-            else
-            {
-                <p>No Title found</p>
-            }
-            @if (ViewModel.SelectedBlog.Content != null)
-            {
-                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Content: @ViewModel.SelectedBlog.Content</p>
-            }
-            else
-            {
-                <p>No content found</p>
-            }
-            @if (ViewModel.SelectedBlog.Author != null)
-            {
-                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Author: @ViewModel.SelectedBlog.Author</p>
-            }
-            else
-            {
-                <p>No author found</p>
-            }
-            @if (ViewModel.SelectedBlog.CreatedAt != null)
-            {
-                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Date: @ViewModel.SelectedBlog.CreatedAt</p>
-            }
-            else
-            {
-                <p>No date found</p>
-            }
+            <p style="color: #2e7d32; font-size: 1.2rem;">Loading blogs...</p>
         }
     </main>
 </div>
 
 @code {
-    [Parameter]
-    public string Id { get; set; }
+    private void NavigateToDetail(int blogId)
+    {
+        Navigation.NavigateTo($"blog/{blogId}");
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrWhiteSpace(Id))
-        {
-            if (int.TryParse(Id, out int blogId))
-            {
-                try
-                {
-                    ViewModel.SelectedBlog = await ViewModel.GetBlogByIdAsync(blogId);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error fetching blog details: {ex.Message}");
-                    // Display user-friendly error message (optional)
-                }
-            }
-            else
-            {
-                // Handle invalid ID
-                Console.WriteLine("Invalid blog ID.");
-            }
-        }
-        else
-        {
-            // Handle missing ID
-            Console.WriteLine("Blog ID not provided.");
-        }
+        await ViewModel.LoadBlogs(); // Call LoadBlogs asynchronously
     }
 }

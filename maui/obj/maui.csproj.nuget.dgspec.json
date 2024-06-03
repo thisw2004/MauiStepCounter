@@ -52,7 +52,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
@@ -60,11 +60,11 @@
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
@@ -107,7 +107,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
@@ -115,11 +115,11 @@
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
-              "version": "[8.0.7, )"
+              "version": "[8.0.21, )"
             },
             "Plugin.LocalNotification": {
               "target": "Package",

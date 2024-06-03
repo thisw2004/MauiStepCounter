@@ -2,51 +2,55 @@
 @using maui.components.ViewModels
 @inject BlogViewModel ViewModel
 
-<h1>Blog Detail Page</h1>
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h1>Blog Detail Page</h1>
 
-<p>Blog ID: @Id</p>
+        <p>Blog ID: @Id</p>
 
-@if (ViewModel.SelectedBlog?.Title == null)
-{
-    <button><a href="/home">Back</a></button>
-    <p>Loading blog details...</p>
-}
-else
-{
-    <button><a href="/home">Back</a></button>
-    @if (ViewModel.SelectedBlog?.Title != null)
-    {
-        <h2>Title: @ViewModel.SelectedBlog.Title</h2>
-    }
-    else
-    {
-        <p>No Title found</p>
-    }
-    @if (ViewModel.SelectedBlog?.Content != null)
-    {
-        <p>Content: @ViewModel.SelectedBlog.Content</p>
-    }
-    else
-    {
-        <p>No content found</p>
-    }
-    @if (ViewModel.SelectedBlog?.Content != null)
-    {
-        <p>Author: @ViewModel.SelectedBlog.Author</p>
-    }
-    else
-    {
-        <p>No content found</p>
-    }
-    @if (ViewModel.SelectedBlog?.Content != null)
-    {
-        <p>Date: @ViewModel.SelectedBlog.CreatedAt</p>
-    }
-    else
-    {
-        <p>No content found</p>
-    }
-}
+        @if (ViewModel.SelectedBlog == null)
+        {
+            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;"><a href="/home" style="color: #ffffff; text-decoration: none;">Back</a></button>
+            <p>Loading blog details...</p>
+        }
+        else
+        {
+            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;"><a href="/blogs" style="color: #ffffff; text-decoration: none;">Back</a></button>
+            @if (ViewModel.SelectedBlog.Title != null)
+            {
+                <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: #2e7d32;">Title: @ViewModel.SelectedBlog.Title</h2>
+            }
+            else
+            {
+                <p>No Title found</p>
+            }
+            @if (ViewModel.SelectedBlog.Content != null)
+            {
+                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Content: @ViewModel.SelectedBlog.Content</p>
+            }
+            else
+            {
+                <p>No content found</p>
+            }
+            @if (ViewModel.SelectedBlog.Author != null)
+            {
+                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Author: @ViewModel.SelectedBlog.Author</p>
+            }
+            else
+            {
+                <p>No author found</p>
+            }
+            @if (ViewModel.SelectedBlog.CreatedAt != null)
+            {
+                <p style="margin-bottom: 1rem; font-size: 1.2rem;">Date: @ViewModel.SelectedBlog.CreatedAt</p>
+            }
+            else
+            {
+                <p>No date found</p>
+            }
+        }
+    </main>
+</div>
 
 @code {
     [Parameter]

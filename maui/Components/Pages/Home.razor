@@ -1,62 +1,82 @@
-﻿<div class="top-row ps-3 navbar navbar-dark " style="background-color:#2e7d32;">
-    <div class="container-fluid">
-        <a class="navbar-brand  fw-bold" style="color:white;" href="">StepCounter</a>
-    </div>
+﻿@page "/home"
+@using maui.components.ViewModels
+@using maui.Components.Models
+@inject StepgoalViewModel ViewModel
+@inject IJSRuntime JSRuntime
+
+@using System.Globalization
+@using Plugin.LocalNotification
+
+<div style="display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Open Sans', sans-serif; margin: 0; padding: 0; background: linear-gradient(to bottom, #e0f7fa, #ffccbc);">
+    
+
+    <main style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; margin: 2rem auto; background: rgba(255, 255, 255, 0.9); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: #2e7d32;">Home</h2>
+
+        <p style="margin-bottom: 1rem; font-size: 1.2rem;">Today it is:</p>
+
+        @{
+            CultureInfo originalCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = new CultureInfo("en-US");
+            string today = DateTime.Today.ToString("dddd, dd MMMM yyyy");
+            CultureInfo.CurrentCulture = originalCulture; // Reset to the original culture if needed
+        }
+
+        <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: #2e7d32;">@today</h2>
+
+        <p style="margin-bottom: 1rem; font-size: 1.2rem;">Number of steps walked: <p style="text-align:center;font-size:30px; color:cornflowerblue; font-weight:bold;">@ViewModel.NumberOfSteps</p></p>
+        <p style="margin-bottom: 1rem; font-size: 1.2rem;">Steps remaining to reach goal:<p style="text-align:center;font-size:30px; color:cornflowerblue; font-weight:bold;">@ViewModel.StepsRemaining</p> </p>
+
+        @if (ViewModel.StepsRemaining <= 0)
+        {
+            <p style="margin-bottom: 1.5rem; font-size: 1.2rem; color: #2e7d32;">You have reached your goal!</p>
+        }
+        else
+        {
+            <p style="margin-bottom: 1.5rem; font-size: 1.2rem; color: #2e7d32;">Keep going!</p>
+        }
+
+        <p style="margin-bottom: 1rem; font-size: 1.2rem;">Your stepgoal for today:</p>
+
+        @if (!ViewModel.IsSuccessful)
+        {
+            <p style="color: red; margin-bottom: 1rem;">Error fetching step goals. Please try again later.</p>
+            <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;" @onclick="ViewModel.DeleteTodaysGoals">Delete Today's Goals</button>
+        }
+        else
+        {
+            if (ViewModel.AllStepgoals?.Any(sg => sg.Date.Date == DateTime.Today.Date) == true)
+            {
+                <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem 0; font-size: 1.2rem; color: #2e7d32;">
+                    @foreach (var goal in ViewModel.AllStepgoals.Where(sg => sg.Date.Date == DateTime.Today.Date))
+                    {
+                        <li>
+                            @goal.Goal steps
+                        </li>
+                    }
+                </ul>
+                @if (ViewModel.AllStepgoals.Count > 1)
+                {
+                    <button style="padding: 0.75rem 1.5rem; background-color: #ffcb6b; color:orangered; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;" @onclick="ViewModel.DeleteTodaysGoals">Delete Today's Goals</button>
+                    <button style="padding: 0.75rem 1.5rem; background-color: cornflowerblue; color: rebeccapurple; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                        <a href="/UpdateStepgoal" style=" text-decoration: none;">Modify goal</a>
+                    </button>
+                }
+            }
+            else
+            {
+                <p style="margin-bottom: 1rem; font-size: 1.2rem;">No step goals set for today. Wanna set a goal?</p>
+                <button style="padding: 0.75rem 1.5rem; background-color: #2e7d32; color: #ffffff; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                    <a href="/AddStepgoal" style="color: #ffffff; text-decoration: none;">Add goal for today!</a>
+                </button>
+            }
+        }
+    </main>
 </div>
 
-<style>
-    .navbar-toggler:focus {
-        outline: none !important;
-        border:none !important;
-        box-shadow:none;
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadTodayStepgoalsAndStartCounting();
     }
-
-    .nav-link:focus{
-        /*
-        background-color:none !important;
-        */
-    }
-
-    .navbar-toggler{
-        background-image:none;
-    }
-
-</style>
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" style="border:none !important; " />
-
-<div style="background-color:#6474C5;" class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column" style="background-color:#a7d4a9;">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" style="color:white" href="/home" Match="NavLinkMatch.All">
-                <i class="bi bi-map" aria-hidden="true" ></i> Home
-            </NavLink>
-        </div>
-        <hr style="margin-left:10%; margin-top:0;margin-bottom:0;color:white; width:80%; height:3px; border:none;" />
-        @*<div class="nav-item px-3">
-            <NavLink class="nav-link" style="color:#BED302" href="/StepGoals">
-                <i class="bi bi-map" aria-hidden="true"></i> StepGoals
-            </NavLink>
-        </div>*@
-        @*<hr style="margin-left:10%;margin-top:0;margin-bottom:0; color:white; width:80%; height:3px; border:none;" />*@
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" style="color:white" href="/blogs">
-                <i class="bi bi-map" aria-hidden="true"></i> Blogs
-            </NavLink>
-        </div>
-        <hr style="margin-left:10%;margin-top:0;margin-bottom:0; color:white; width:80%; height:3px; border:none;" />
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" style="color:white" href="/Roads">
-                <i class="bi bi-map" aria-hidden="true"></i> Routes
-            </NavLink>
-        </div>
-        <hr style="margin-left:10%;margin-top:0;margin-bottom:0; color:white; width:80%; height:3px; border:none;" />
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" style="color:white" href="/">
-                <i class="bi bi-map" aria-hidden="true"></i> <img alt="logout" src="./Icons/lock.png" 
-                                                                  style="height:30px; width:30px; mix-blend-mode:multiply;
-:"/>
-                
-            </NavLink>
-        </div>
-    </nav>
-</div>
+}
