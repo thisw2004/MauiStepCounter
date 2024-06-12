@@ -186,7 +186,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var allStepgoals = await response.Content.ReadFromJsonAsync<List<StepgoalModel>>(); //ophalen stappendoel met gebruik van model,stappendoel wordt op basis van logica geselecteerd en hier meegegeven aan de delete request.
+            var allStepgoals = await response.Content.ReadFromJsonAsync<List<StepgoalModel>>(); 
             var todaysGoals = allStepgoals.Where(sg => sg.Date.Date == today.Date).ToList();
 
             int deletedGoalsCount = todaysGoals.Count;
