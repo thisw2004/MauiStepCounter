@@ -27,7 +27,7 @@ namespace maui.components.ViewModels
         private string Url = "https://3j1vftcr-5041.euw.devtunnels.ms";
 
         /*??*/
-        public event EventHandler<string> WhenRegisterSuccesful; // Event for successful register
+        public event EventHandler<string> WhenRegisterSuccesful; 
 
         public async Task<string> Register()
         
@@ -43,14 +43,14 @@ namespace maui.components.ViewModels
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
-                    // Handle successful login response (e.g., deserialize data)
+               
 
-                    WhenRegisterSuccesful?.Invoke(this, jsonResponse); // Raise event for successful login
+                    WhenRegisterSuccesful?.Invoke(this, jsonResponse); 
 
                     _navigationManager.NavigateTo("/home");
                     
 
-                    return null; // Optional: Return response data for further processing
+                    return null; 
                 }
                 else
                 {

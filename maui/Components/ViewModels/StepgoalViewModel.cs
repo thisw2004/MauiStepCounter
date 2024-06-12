@@ -286,7 +286,7 @@ public class StepgoalViewModel : INotifyPropertyChanged
             Console.WriteLine($"Error starting pedometer: {ex.Message}");
         }
     }
-    private bool milestoneNotificationShown = false; // Add this field to keep track of milestone notifications
+    private bool milestoneNotificationShown = false; 
     private bool QuarterMilestoneReached = false;
     private bool HalfMilestoneReached = false;
     private bool ThreeQuarterMilestoneReached = false;

@@ -23,7 +23,7 @@ namespace maui.components.ViewModels
         public string? Email { get; set; }
         public string? Password { get; set; }
 
-        public event EventHandler<string> OnLoginSuccessful; // Event for successful login
+        public event EventHandler<string> OnLoginSuccessful; 
 
         public async Task<string> Login()
         
@@ -40,14 +40,14 @@ namespace maui.components.ViewModels
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
-                    // Handle successful login response (e.g., deserialize data)
+                    
 
-                    OnLoginSuccessful?.Invoke(this, jsonResponse); // Raise event for successful login
+                    OnLoginSuccessful?.Invoke(this, jsonResponse); 
 
                     _navigationManager.NavigateTo("/home");
                     
 
-                    return null; // Optional: Return response data for further processing
+                    return null;
                 }
                 else
                 {
